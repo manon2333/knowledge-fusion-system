@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/lib/echarts/world.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <script type="text/javascript" src="/js/map_api.min.js"></script>
+    <style>
+        .layui-input, .layui-select, .layui-textarea{height: 24px; font-size:12px;}
+        .layui-form-label{font-size:12px; line-height: 24px; padding:0; width: 100px; text-align:left;}
+        .gxList span{display:inline-block; margin-right:8px; text-align: center;}
+        .gxList span.cos1{width:120px;}
+        .gxList span.cos2{width:60px;}
+        .gxList span.cos3{width:120px;}
+        .gxList span.cos4{width:80px; margin:0;}
+        .layui-btn+.layui-btn{margin:0;}
+
+        #imgs{width:100px; height:100px; position:relative;}
+        #imgs img{width:100%; height:0100%; position:absolute; top:0; left:0; z-index:0}
+        #imgs #test1{width:100%; height:100%; position:absolute; top:0; left:0; z-index:2; background:url("/images/imgAdd_01.png") no-repeat rgba(255, 255, 255, 0.2); background-size:50%; background-position:center center; border: 1px dashed#fff; border-radius: 10px;}
+        .stxqList h5{font-size:20px; margin-bottom: 12px;}
+        .sxStyle{font-weight: 600; font-size: 16px; color: #D7D7D7; line-height: 30px; border-bottom: 1px solid #334e67; margin-bottom: 10px;}
+        .gxList>div>span{color:#6498BB; font-size: 16px;}
+    </style>
+</head>
+<body class="comment ifra">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="content">
+    <div class="contBox" id="conts">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs7">
+                <div class="cBox box_l">
+                    <div class="sub">
+                        <div class="sub_head">
+                            <h3><b class="blog g-off">未校对</b>西奥多·罗斯福号航空母舰</h3>
+                            <b class="del del1 fr" title="删除"></b>
+                            <div class="bz"><span>2020-7-17  12:19:39</span></div>
+                        </div>
+                        <div class="sub_body">
+                            <div class="content">
+                                西奥多·罗斯福号航空母舰（USS Theodore Roosevelt CVN-71），或罗斯福号航空母舰，是美国尼米兹级核动力航空母舰的四号舰，起造于1981年，于1984年正式下水。西奥多·罗斯福是美国第26任总统（任期1901年—1909年），是个海军迷，任期内大力扩充海军，也在他任内完成了大白舰队计划。昵称“T.R.”的罗斯福号是美国海军第一艘以西奥多·罗斯福总统命名的航空母舰，但除了该舰外，美国海军其实曾拥有过另一艘以罗斯福为名的航空母舰──以第32任总统富兰克林·罗斯福命名的富兰克林·D·罗斯福号（USS Franklin D. Roosevelt CVB-42）。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs5">
+                <div class="cBox box_r ">
+                    <div class="cbn cb_nav1 clearfix">
+                        <div class="layui-tab-content stTab">
+                            <div class="layui-tab-item layui-show">
+                                <form class="layui-form clearfix tit" action="javascript:;">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="color: #027DB4;">实体类型</label>
+                                        <div class="layui-inline" style="width:160px;">
+                                            <select name="" class="xzs" lay-search>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--                                <span class="fr">本文共识别到4个实体</span>-->
+                                </form>
+                                <div class="cn1_ls">
+                                    <ul class="stList">
+                                        <li>
+                                            <span class="tit">西奥多·罗斯福号航空母舰</span>
+                                            <span class="sx">实体属性</span>
+                                            <span class="sx gx">实体关系</span>
+                                            <b class="del del1"></b>
+                                        </li>
+                                        <li>
+                                            <span class="tit">西奥多·罗斯福号航空母舰</span>
+                                            <span class="sx">实体属性</span>
+                                            <span class="sx">实体关系</span>
+                                            <b class="del del1"></b>
+                                        </li>
+                                        <li>
+                                            <span class="tit">西奥多·罗斯福号航空母舰<b class="new">新</b></span>
+                                            <span class="sx">实体属性</span>
+                                            <span class="sx">实体关系</span>
+                                            <b class="del del1"></b>
+                                        </li>
+                                    </ul>
+                                    <div class="addSt"><span class="add"><b></b>添加实体</span></div>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="layui-tab stxqList">
+                                    <div class="clearfix">
+                                        <h5 class="fl"><!--西奥多·罗斯福号航空母舰--></h5>
+
+                                        <div class="fr">
+                                            <!--                                        <b class="edit edit1" title="编辑"></b>-->
+                                            <b class="del del1 stDel" title="删除"></b>
+                                            <b class="back" title="返回"></b>
+                                        </div>
+                                        <div class="fr">
+                                            <form class="layui-form clearfix tit" action="javascript:;" lay-filter="editType">
+                                                <div class="layui-inline">
+                                                    <!-- <label class="layui-form-label" style="color: #027DB4;">实体类型</label>-->
+                                                    <div class="layui-inline" style="width:110px;">
+                                                        <select name="editt" lay-verify="required" class="xzs editType" lay-search>
+                                                        </select>
+                                                    </div>
+                                                    <div class="layui-inline">
+                                                        <button type="button" lay-submit class="layui-btn layui-btn-xs layui-btn-normal" lay-filter="edit">修改实体类型</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">实体属性</li>
+                                        <li>实体关系</li>
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show">
+                                            <form class="layui-form" action="javascript:;">
+                                                <!--                                            <div class="layui-form-item">-->
+                                                <!--                                                <label class="layui-form-label">实体名称</label>-->
+                                                <!--                                                <div class="layui-input-block">-->
+                                                <!--                                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">-->
+                                                <!--                                                </div>-->
+                                                <!--                                            </div>-->
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">别名</label>
+                                                    <div class="layui-input-block">
+                                                        <input type="text" placeholder="多个别名请用|分隔" id="alias_name" autocomplete="off" class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">图片</label>
+                                                    <div class="layui-input-block">
+                                                        <div id="imgs">
+                                                            <img src="" alt="">
+                                                            <div id="test1"></div>
+                                                            <div id="test9" style="display:none;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">摘要</label>
+                                                    <div class="layui-input-block">
+                                                        <textarea name="" placeholder="请输入摘要" id="description" class="layui-textarea"></textarea>
+                                                    </div>
+                                                </div>
+                                                <h6 class="sxStyle">属性</h6>
+                                                <div class="inpList">
+                                                    <div class="layui-form-item">
+                                                        <label class="layui-form-label">输入框</label>
+                                                        <div class="layui-input-block">
+                                                            <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-input-block">
+                                                        <button class="layui-btn" lay-submit lay-filter="saveSx">保存属性</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="layui-tab-item gxList">
+                                            <div>
+                                                <span class="cos1">实体名</span>
+                                                <span class="cos2">关系</span>
+                                                <span class="cos3">实体名</span>
+                                                <span class="cos4"><button class="layui-btn layui-btn-xs layui-btn-normal addGx">添加关系</button></span>
+                                            </div>
+                                            <ul>
+                                                <!--                                            <li>-->
+                                                <!--                                                <span class="cos1">西奥多·罗斯福号航空母舰</span>-->
+                                                <!--                                                <span class="cos2">港口</span>-->
+                                                <!--                                                <span class="cos3">圣迭戈海军基地</span>-->
+                                                <!--                                                <span class="cos4">-->
+                                                <!--                                                    <button class="layui-btn layui-btn-xs layui-btn-normal">编辑</button>-->
+                                                <!--                                                    <button class="layui-btn layui-btn-xs layui-btn-normal">删除</button>-->
+                                                <!--                                                </span>-->
+                                                <!--                                            </li>-->
+                                            </ul>
+                                            <div class="layui-form-item" style="margin-top:20px;">
+                                                <div class="layui-input-block">
+                                                    <button class="layui-btn" lay-submit lay-filter="saveGx">保存关系</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var stObj = {};
+        var stData = {};
+        var isEntitiesNew = {};
+        var indId = '';
+        var wordName = ''; //文章名字
+        layui.use(['form','layer','element','upload'], function(){
+            var form = layui.form;
+            var layer = layui.layer;
+            var element = layui.element;
+            var upload  = layui.upload;
+            entTypeList();
+            form.render();
+
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#test1'
+                ,url: '/manage/updateEntityProperties' //改成您自己的上传接口
+                ,auto: false
+                //,multiple: true
+                ,bindAction: '#test9'
+                ,accept:'images'
+                ,acceptMime: 'image/jpg, image/png'
+                ,exts:'jpg|png|jpeg'
+                ,choose: function(obj){
+                    // console.log(obj);
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        // console.log(index, file, result);
+                        $('#imgs img').attr('src', result); //图片链接（base64）
+                    });
+                }
+                ,done: function(res){
+                    //如果上传失败
+                    if(res.code > 0){
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+
+            //左侧 文章 内容
+            $.ajax({
+                url:'/manage/importedPassageInfo',
+                type:'post',
+                data:{uuid:id,entityType:''},
+                success:function(msg){
+
+                    if(msg.success) {
+                        var res = JSON.parse(msg.json);
+                        // console.log(res);
+                        $('.content').html(res.fileInfo.fileContent);
+                        wordName = res.fileInfo.filename
+                        $('.sub_head h3').text(wordName);
+                        $('.bz span').text(res.fileInfo.time);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+
+            //右侧 实体 关系 列表
+            $.ajax({
+                url:'/manage/importedEntityInfo',
+                type:'post',
+                data:{uuid:id,entityType:''},
+                success:function(msg){
+
+                    if(msg.success) {
+                        var res = JSON.parse(msg.json);
+                        console.log(res);
+
+                        var entities = res.entities;
+                        isEntitiesNew = res.isEntitiesNew;
+                        var str = '';
+                        for(var i=0; i<entities.length; i++){
+                            stObj[entities[i].id] = entities[i];
+                            var bn = isEntitiesNew[entities[i].id] ? '<b class="new">新</b>' : '' ;
+                            str += '<li infoId="' + entities[i].id + '">' +
+                                '    <span class="tit">' + entities[i].name + bn + '</span>' +
+                                '    <span class="sx">实体属性</span>' +
+                                '    <span class="sx gx">实体关系</span>' +
+                                '    <b class="del del1" title="删除"></b>' +
+                                '</li>';
+                        }
+                        $('.stList').html(str);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+
+            //编辑实体属性
+            form.on('submit(edit)', function(data){
+                $.ajax({
+                    url:'/manage/updateEntityType',
+                    type:'post',
+                    data:{uuid:id,entityType:data.field.editt,subject:stData.name},
+                    success:function(msg){
+                        if(msg.success) {
+                            var res = JSON.parse(msg.json);
+                            // console.log(res);
+                            layer.msg(msg.errMsg,{
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            },function(){
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                });
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            //点击文章关联实体 右侧显示 实体属性 与 实体关系
+            $('.content').on('click','.clsSt',function(){
+                var indId = $(this).attr('data-id');
+                showStFn(indId);
+            });
+
+            //右侧显示 点击实体属性 与 实体关系
+            $('.stTab').on('click','.sx',function(){
+                indId = $(this).parents('li').attr('infoId');
+                showStFn(indId);
+
+            });
+
+            //示 实体属性 与 实体关系 的方法
+            function showStFn(indId){
+                stData = stObj[indId];
+                // console.log(stData);
+
+                $('.stxqList h5').text(stData.name);
+                $('.stxqList #description').val(stData.description);
+                // console.log(stData.alias_name.join('|'));
+                $('.stxqList #alias_name').val(stData.alias_name.join('|'));
+
+
+
+                form.val("editType", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                    "editt": stData.entityType // "name": "value"
+                });
+
+                var properties = '';
+                for(var i=0; i<stData.properties.length; i++){
+                    properties += '<div class="layui-form-item">' +
+                        '    <label class="layui-form-label">' + stData.properties[i].name + '</label>' +
+                        '    <div class="layui-input-block">' +
+                        '        <input type="text" value="' + stData.properties[i].value + '" autocomplete="off" class="layui-input">' +
+                        '    </div>' +
+                        '</div>';
+                }
+
+                $('.inpList').html(properties);
+
+                var gxNames = stData.name;
+                var relations = '';
+                for(var i=0; i<stData.relations.length; i++){
+                    var sname = stData.relations[i].srcName == gxNames ? stData.relations[i].srcName : stData.relations[i].endName;
+                    var ename = stData.relations[i].srcName == gxNames ? stData.relations[i].endName : stData.relations[i].srcName;
+
+                    relations += '<li>' +
+                        '    <span class="cos1">' + sname + '</span>' +
+                        '    <span class="cos2">' + stData.relations[i].relType + '</span>' +
+                        '    <span class="cos3">' + ename + '</span>' +
+                        '    <span class="cos4">' +
+                        '        <button class="layui-btn layui-btn-xs layui-btn-normal btns">编辑</button>' +
+                        '        <button class="layui-btn layui-btn-xs layui-btn-normal btns">删除</button>' +
+                        '    </span>' +
+                        '</li>';
+                }
+                $('.gxList ul').html(relations);
+                // form.render();
+                if($(this).text() == '实体关系'){
+                    $('.stxqList .layui-tab-title li').eq(0).removeClass('layui-this');
+                    $('.stxqList .layui-tab-title li').eq(1).addClass('layui-this');
+                    $('.stxqList .layui-tab-item').eq(0).removeClass('layui-show');
+                    $('.stxqList .layui-tab-item').eq(1).addClass('layui-show');
+                }else{
+                    $('.stxqList .layui-tab-title li').eq(1).removeClass('layui-this');
+                    $('.stxqList .layui-tab-title li').eq(0).addClass('layui-this');
+                    $('.stxqList .layui-tab-item').eq(1).removeClass('layui-show');
+                    $('.stxqList .layui-tab-item').eq(0).addClass('layui-show');
+                }
+                $('.stTab>.layui-tab-item').eq(0).removeClass('layui-show');
+                $('.stTab>.layui-tab-item').eq(1).addClass('layui-show');
+            }
+
+            //实体列表 删除
+            $('.stList').on('click','.del',function(){
+                indId = $(this).parents('li').attr('infoId');
+                layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                    $(this).parents('li').remove();
+                    delFN(id,stObj[indId].name);
+                });
+            });
+
+            //实体详情 删除
+            $('.stxqList').on('click','.stDel',function(){
+                layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                    delFN(id,stData.name);
+                });
+            });
+
+            //返回 文章关联实体列表
+            $('.back').on('click',function(){
+
+                $('.stTab>.layui-tab-item').eq(1).removeClass('layui-show');
+                $('.stTab>.layui-tab-item').eq(0).addClass('layui-show');
+
+            });
+
+            //保存 实体属性
+            form.on('submit(saveSx)', function(data){
+                // layer.msg(JSON.stringify(data.field))
+                var propertiesArr = [];
+
+                $('.inpList .layui-form-item').each(function(){
+                    propertiesArr.push({
+                        name:$(this).find('label').text(),
+                        src:stData.properties[$(this).index()],
+                        value:$(this).find('input').val(),
+                    });
+                });
+                stData.alias_name = $('#alias_name').val().split('|');
+                stData.description = $('#description').val();
+                stData.properties = propertiesArr;
+                // console.log(stData);
+                uploadInst.config.data = {uuid:id,entity:JSON.stringify(stData),isNew:isEntitiesNew[indId]};
+                // console.log(uploadInst);
+                if($('#imgs img').attr('src') == ''){
+
+                    $.ajax({
+                        url:'/manage/updateEntityProperties',
+                        type:'post',
+                        data:{uuid:id,entity:JSON.stringify(stData),isNew:isEntitiesNew[indId]},
+                        success:function(msg){
+                            if(msg.success) {
+                                var res = JSON.parse(msg.json);
+                                // console.log(res);
+                                layer.msg(msg.errMsg);
+                            }
+                        },
+                        error:function(err){
+                            console.log(err);
+                        }
+                    });
+
+                }
+                $('#test9').click();
+                return false;
+            });
+
+            //保存 实体关系
+            form.on('submit(saveGx)', function(data){
+                // layer.msg(JSON.stringify(data.field));
+                // console.log(stData);
+                $.ajax({
+                    url:'/manage/updateEntityRelation',
+                    type:'post',
+                    data:{relation:JSON.stringify(stData.relations),uuid:id,isNew:isEntitiesNew[stData.id],filename:wordName,entityType:stData.entityType,entityName:stData.name},
+                    success:function(msg){
+                        if(msg.success){
+                            var data = JSON.parse(msg.json);
+                            layer.msg(msg.errMsg);
+                        }else{
+                            layer.msg(msg.errMsg);
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                });
+
+                return false;
+            });
+
+            //添加关系
+            $('.addGx').on('click',function(){
+                layer.open({
+                    id:'gxAdd',
+                    type: 2,
+                    title:'添加关系',
+                    area: ['600px', '300px'],
+                    content: './menuOpen/gxAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    success: function(layero, index){
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        iframeWin.child(stData.entityType,stData.name,id,'add');
+                    }
+                });
+            });
+
+            //添加实体
+            $('.add').on('click',function(){
+                // console.log(123);
+                layer.open({
+                    id:'stAdd',
+                    type: 2,
+                    title:'添加实体',
+                    area: ['600px', '500px'],
+                    content: './menuOpen/stAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    success: function(layero, index){
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        iframeWin.child(id);
+                    }
+                });
+            });
+
+            //编辑关系 || 删除关系
+            $('.gxList ul').on('click','.btns',function(){
+                if($(this).text() == '编辑'){
+                    var obj = {};
+                    obj.gx = $(this).parents('li').find('.cos2').text();
+                    obj.ename = $(this).parents('li').find('.cos3').text();
+                    obj.indx = $(this).parents('li').index();
+
+                    layer.open({
+                        id:'gxAdd',
+                        type: 2,
+                        title:'编辑关系',
+                        area: ['600px', '300px'],
+                        content: './menuOpen/gxAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        success: function(layero, index){
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin.child(stData.entityType,stData.name,id,'edit',obj);
+                        }
+                    });
+                }else{
+                    stData.relations.splice($(this).parents('li').index(),1);
+                    $(this).parents('li').remove();
+                    layer.msg('删除成功！');
+                }
+
+            });
+
+
+
+        });
+        function GetValue(data,type,indx){
+            // console.log(data);
+            if(type == 'add'){
+                var str = '<li>' +
+                    '<span class="cos1">' + data.sname + '</span>\n' +
+                    '<span class="cos2">' + data.gx + '</span>\n' +
+                    '<span class="cos3">' + data.ename + '</span>\n' +
+                    '<span class="cos4">' +
+                    '<button class="layui-btn layui-btn-xs layui-btn-normal btns">编辑</button>\n' +
+                    '<button class="layui-btn layui-btn-xs layui-btn-normal btns">删除</button>' +
+                    '</span>' +
+                    '</li>';
+                $('.gxList ul').append(str);
+                stData.relations.push({
+                    srcName:data.sname,
+                    relType:data.gx,
+                    endName:data.ename,
+                });
+            }else{
+                $('.gxList ul').find('li').eq(indx).find('.cos2').text(data.gx);
+                $('.gxList ul').find('li').eq(indx).find('.cos3').text(data.ename);
+                stData.relations[indx].srcName = $('.gxList ul').find('li').eq(indx).find('.cos1').text();
+                stData.relations[indx].relType = data.gx;
+                stData.relations[indx].endName = data.ename;
+            }
+            // console.log(stData.relations);
+        }
+        function delFN(ids,subject){
+
+            $.ajax({
+                url:'/manage/deleteEntity',
+                type:'post',
+                data:{uuid:ids,subject:subject},
+                success:function(msg){
+                    if(msg.success){
+                        layer.msg(msg.errMsg,{
+                            time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(msg.errMsg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .layui-nav{background:transparent; font-weight:400; padding:0; display: inline-block;}
+        .layui-nav .layui-nav-item a{padding:0;}
+        .layui-nav .layui-nav-more{display:none;}
+        .layui-nav-bar{display:none;}
+        .layui-nav .layui-nav-item{line-height:20px; vertical-align: baseline;}
+        .layui-nav-child{top:22px; width: 90px; line-height: 26px; left:50%; margin-left: -45px;}
+        .layui-nav-child dd{box-shadow:0 0 0 0 #FFF;}
+        #open .layui-table tbody tr td dd a{margin:0; padding: 0; font-size:12px;}
+        #open .layui-table tbody tr td dd a:hover{text-decoration:none;}
+        #open .layui-table tbody tr td>a{display:inline-block;}
+        #open .layui-table tbody tr td a{margin:0 8px;}
+        .layui-nav .layui-nav-child dd.layui-this a, .layui-nav-child dd.layui-this{background:transparent;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<form class="layui-form iframe" action="javascript:;" id="search">
+    <div class="">
+        <a href="sjkdr1.html" class="layui-btn layui-btn-normal" >
+            <i class="layui-icon">&#xe67c;</i>关系型数据库导入
+        </a>
+<!--        <button type="button" class="layui-btn layui-btn-normal" id="test9" style="display:none;">开始上传</button>-->
+        <a href="./wjsc.html" class="layui-btn layui-btn-normal plDel">文件上传</a>
+    </div>
+    <br>
+    <div class="layui-inline">
+        <label class="layui-form-label">数据类型</label>
+        <div class="layui-input-inline btnCont btnCont1" datatype="datasourcetype">
+            <button type="button" class="layui-btn layui-border-black" dataid="0">结构化</button>
+            <button type="button" class="layui-btn layui-border-black" dataid="1">非结构化</button>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">同步状态</label>
+        <div class="layui-input-inline btnCont btnCont2" datatype="synchronizeState">
+            <button type="button" class="layui-btn layui-border-black" dataid="1|2|4|5">已同步</button>
+            <button type="button" class="layui-btn layui-border-black" dataid="0">未同步</button>
+            <button type="button" class="layui-btn layui-border-black" dataid="3">同步失败</button>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">是否删除</label>
+        <div class="layui-input-inline btnCont btnCont3" datatype="isdelete">
+            <button type="button" class="layui-btn layui-border-black" dataid="1">已删除</button>
+            <button type="button" class="layui-btn layui-border-black" dataid="0">未删除</button>
+        </div>
+    </div>
+    <div class="layui-inline inp_200">
+        <label class="layui-form-label">数据源名称</label>
+        <div class="layui-input-inline" style="width: 200px;">
+            <input type="text" name="dataSourceName" placeholder="请输入实体名称" autocomplete="off" class="layui-input keySc">
+        </div>
+    </div>
+</form>
+<p class="c_fff">共<span class="totle"></span>记录，当前每页显示<span class="dq"></span>条</p>
+<div class="" id="open">
+<!--    <form class="layui-form" action="javascript:;">-->
+        <!--    <div>每页显示 8 条 , 当前显示 1-8 条记录</div>-->
+        <table class="layui-table">
+            <colgroup>
+                <col width="80">
+                <col width="">
+                <col width="150">
+                <col width="100">
+                <col width="100">
+                <col width="200">
+                <col width="100">
+                <col width="280">
+            </colgroup>
+            <thead>
+                <tr>
+    <!--                <th><input type="checkbox" name="" lay-skin="primary" lay-filter="quanx"></th>-->
+                    <th>序号</th>
+                    <th>数据源名称</th>
+                    <th>数据类型</th>
+                    <th>同步状态</th>
+                    <th>同步周期</th>
+                    <th>上次同步时间</th>
+                    <th>是否删除</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="ctList">
+<!--                <tr>-->
+<!--                  <td>1</td>-->
+<!--                  <td>海</td>-->
+<!--                  <td>结构化数据</td>-->
+<!--                  <td><span class="ok">已同步</span></td>-->
+<!--                  <td>60</td>-->
+<!--                  <td>2020-7-11 12:43:23</td>-->
+<!--                  <td>未删除</td>-->
+<!--                  <td>-->
+<!--                    <a href="javascript:;">开始同步</a>-->
+<!--                    <a href="javascript:;">暂停同步</a>-->
+<!--&lt;!&ndash;                    <a href="javascript:;">更多</a>&ndash;&gt;-->
+<!--                    <ul class="layui-nav">-->
+<!--                      <li class="layui-nav-item">-->
+<!--                          <a href="javascript:;">更多</a>-->
+<!--                          <dl class="layui-nav-child">-->
+<!--                              <dd><a href="javascript:;">手动同步</a></dd>-->
+<!--                              <dd><a href="./editSJY.html">编辑数据源</a></dd>-->
+<!--                              <dd><a href="javascript:;">删除数据源</a></dd>-->
+<!--                              <dd><a href="./sjyHtmlList.html">查看数据源</a></dd>-->
+<!--                          </dl>-->
+<!--                      </li>-->
+<!--                    </ul>-->
+<!--                  </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>2</td>-->
+<!--                    <td>海</td>-->
+<!--                    <td>结构化数据</td>-->
+<!--                    <td><span class="">未同步</span></td>-->
+<!--                    <td>60</td>-->
+<!--                    <td>2020-7-11 12:43:23</td>-->
+<!--                    <td>未删除</td>-->
+<!--                    <td>-->
+<!--                        <a href="javascript:;" class="disClick">开始同步</a>-->
+<!--                        <a href="javascript:;">暂停同步</a>-->
+<!--                        <ul class="layui-nav">-->
+<!--                            <li class="layui-nav-item">-->
+<!--                                <a href="javascript:;">更多</a>-->
+<!--                                <dl class="layui-nav-child">-->
+<!--                                    <dd><a href="javascript:;">手动同步</a></dd>-->
+<!--                                    <dd><a href="javascript:;">编辑数据源</a></dd>-->
+<!--                                    <dd><a href="javascript:;">删除数据源</a></dd>-->
+<!--                                    <dd><a href="javascript:;">查看数据源</a></dd>-->
+<!--                                </dl>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>1</td>-->
+<!--                    <td>海</td>-->
+<!--                    <td>结构化数据</td>-->
+<!--                    <td><span class="no">同步失败</span></td>-->
+<!--                    <td>60</td>-->
+<!--                    <td>2020-7-11 12:43:23</td>-->
+<!--                    <td>未删除</td>-->
+<!--                    <td>-->
+<!--                        <a href="javascript:;">开始同步</a>-->
+<!--                        <a href="javascript:;">暂停同步</a>-->
+<!--                        <ul class="layui-nav">-->
+<!--                            <li class="layui-nav-item">-->
+<!--                                <a href="javascript:;">更多</a>-->
+<!--                                <dl class="layui-nav-child">-->
+<!--                                    <dd><a href="javascript:;">手动同步</a></dd>-->
+<!--                                    <dd><a href="javascript:;">编辑数据源</a></dd>-->
+<!--                                    <dd><a href="javascript:;">删除数据源</a></dd>-->
+<!--                                    <dd><a href="javascript:;">查看数据源</a></dd>-->
+<!--                                </dl>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </td>-->
+<!--                </tr>-->
+            </tbody>
+        </table>
+<!--    </form>-->
+    <div id="page1" style="text-align:center;"></div>
+</div>
+<script>
+    var kVale = getUrlParam('kVale'); //搜索类型;
+    var entType = ''; //搜索类型;
+    var page = adminpages;
+    var limit = 10;
+    var password = 123;
+    var files;
+    var jkObj = {
+        datasourcetype: '2', //数据源类型
+        synchronizeState: '', //同步周期
+        isdelete: '', //是否删除
+        dataSourceName: '', //数据源名
+        pageNumber: 1, //第几页
+        displayNumber: 10 //展示页数
+    }
+    if($.cookie('sjyListPd') != 'false' && $.cookie('sjyListPd') && $.cookie('sjyListObj')){
+        jkObj = JSON.parse($.cookie('sjyListObj'));
+        $.cookie('sjyListPd',false);
+    }
+    layui.use(['form','layer','laypage', 'upload', 'element'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+        var laypage = layui.laypage;
+        var upload = layui.upload;
+
+
+        $('.keySc').val(jkObj.dataSourceName);
+        $('.btnCont1 button').each(function(){
+            if($(this).attr('dataid') == jkObj.datasourcetype){
+                $(this).addClass('cur');
+            }
+        });
+        $('.btnCont2 button').each(function(){
+            if($(this).attr('dataid') == jkObj.synchronizeState){
+                $(this).addClass('cur');
+            }
+        });
+        $('.btnCont3 button').each(function(){
+            if($(this).attr('dataid') == jkObj.isdelete){
+                $(this).addClass('cur');
+            }
+        });
+
+
+        //单个数据源 - 手动同步
+        $('.layui-table').on('click','.layui-nav-child .sdtb',function(){
+            // console.log($(this));
+            var p = $(this).parents('dl');
+            var ids = p.attr('daid');
+            var type = p.attr('datype');
+            // console.log(ids,type);
+            layer.confirm('确定开始手动同步么?', {icon: 3, title:'提示'}, function(index){
+                $.ajax({
+                    url:'/datasource/synchronizeField',
+                    type:'post',
+                    timeout : 1200000, //超时时间设置，单位毫秒
+                    data:{id:ids},
+                    success:function(msg){
+                        // console.log(msg);
+                        // return false;
+                        if(msg.success) {
+                            layer.msg(msg.msg,{
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            },function(){
+                                // window.location.reload();
+                                window.location.href = './sjyglList.html';
+                            });
+                        }else{
+                            layer.msg(msg.msg);
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                });
+                layer.close(index);
+            });
+        });
+
+        //删除单个数据源
+        $('.layui-table').on('click','.layui-nav-child .del',function(){
+            console.log($(this));
+            var p = $(this).parents('dl');
+            var ids = p.attr('daid');
+            var type = p.attr('datype');
+            console.log(ids,type);
+            layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                delFn(ids,type);
+                layer.close(index);
+            });
+        });
+
+        // 开始同步  &&  暂停同步
+        $('.ctList').on('click','.tbClick',function(){
+            var trBox = $(this).parents('tr');
+            var sId = trBox.attr('dataid');
+            var pdz = $(this).text();
+            var url = '';
+            if(pdz == '开始同步'){
+                url = '/datasource/startAutoSync';
+            }else{
+                url = '/datasource/stopAutoSync';
+            }
+            $.ajax({
+                url:url,
+                type:'post',
+                data:{id:sId},
+                beforeSend : function(obj){
+                    load = layer.load(1,{shade: [0.5, '#000']});
+                },
+                success:function(msg){
+                    layer.closeAll();
+                    console.log(msg);
+                    // return false;
+                    if(msg.success) {
+                        layer.msg(msg.msg,{
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                            // window.location.reload();
+                            window.location.href = './sjyglList.html';
+                        });
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    layer.closeAll();
+                    console.log(err);
+                }
+            });
+
+            console.log($(this));
+        })
+
+        //按钮 筛选项  数据类型/同步状态/是否删除
+        $('.btnCont').on('click','.layui-btn',function(){
+
+            if($(this).hasClass('cur')){
+                $(this).removeClass('cur');
+            }else{
+                $(this).addClass('cur');
+            }
+
+            var p = $(this).parent('.btnCont');
+            var dataType = p.attr('datatype');
+
+            var z = '';
+            p.find('.layui-btn').each(function(){
+                if($(this).hasClass('cur')){
+                    z += $(this).attr('dataid') + '|'
+                }
+            });
+            z = z.substr(0,z.length-1)
+
+            jkObj[dataType] = z;
+            jkObj.pageNumber = 1;
+            getList(jkObj);
+        });
+
+        form.render();
+
+        form.on('checkbox(quanx)', function(data){
+            var child = $('.list_che');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+        });
+
+        //单个删除
+        $('.ctList').on('click','.delF',function(){
+            console.log($(this));
+            var ids = $(this).attr('data-id');
+            layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                delFn(ids);
+                layer.close(index);
+            });
+        });
+
+        getList(jkObj);
+
+        $('.keySc').on('keyup',function (e) {
+            var e = e || window.event;
+            if(e.keyCode == 13){
+                // window.location.href = '/admin/ctxj.html?kVale=' + $(this).val();
+
+                jkObj.dataSourceName = $(this).val();
+                jkObj.pageNumber = 1;
+                getList(jkObj);
+            }
+        });
+
+    });
+
+    /**
+     * 查询数据源(数据源列表页)
+     * @param datasourcetype 数据源类型
+     * @param synchronizeState 同步周期
+     * @param isdelete 是否删除
+     * @param dataSourceName 数据源名
+     * @param pageNumber 第几页
+     * @param displayNumber 展示页数
+     * @return QueryResponse
+     */
+
+    function getList(obj){
+        var objStr = JSON.stringify(obj)
+        $.cookie('sjyListObj',objStr)
+        $.ajax({
+            url:'/datasource/alldatasource',
+            type:'post',
+            data:obj,
+            beforeSend : function(obj){
+                load = layer.load(1,{shade: [0.5, '#000']});
+            },
+            success:function(msg){
+                layer.closeAll();
+                $('.ctList').html('');
+                var totals = 0;
+                if(msg.success) {
+                    var res = JSON.parse(msg.json);
+                    console.log(res);
+                    if(Math.ceil(res.total/obj.displayNumber) < obj.pageNumber && Math.ceil(res.total/obj.displayNumber) != 0){
+                        jkObj.pageNumber = Math.ceil(res.total/obj.displayNumber) == 0 ? 1 : Math.ceil(res.total/obj.displayNumber);
+                        getList(obj);
+                        return false;
+                    }
+                    var data = res.alldatalist;
+                    var str = '';
+                    for(var i=0; i<data.length; i++){
+
+                        // str += '<tr>' +
+                        //     '  <td><input class="list_che" type="checkbox" lay-skin="primary" value="' + data[i].relationId + '"></td>' +
+                        //     '  <td>' + eval(i+1) + '</td>' +
+                        //     '  <td>' + getTime(data[i].srcVersion) + '</td>' +
+                        //     '  <td>' + data[i].endType + '</td>' +
+                        //     '  <td>' + data[i].endName + '</td>' +
+                        //     '  <td>' +
+                        //     '' + data[i].relationId + '    <a href="../ctxjContent.html?id=&adminpages=">查看</a>' + page + '' +
+                        //     '    <a href="javascript:;" class="delF" data-Id="' + data[i].relationId + '">删除</a>' +
+                        //     '  </td>' +
+                        //     '</tr>';
+
+                        var isdelete = '';
+                        var datatype = '';
+                        var synchronizeState = '';
+
+                        if(data[i].isdelete == 0){
+                            isdelete = '未删除';
+                        }else{
+                            isdelete = '已删除';
+                        }
+                        var editUrl = '';
+
+                        if(data[i].datatype == 0){
+                            datatype = '结构化';
+                            editUrl = './editSJY1.html';
+                        }else{
+                            datatype = '非结构化';
+                            editUrl = './editSJY2.html';
+                        }
+
+                        var state1 = '<a href="javascript:;" class="tbClick">开始同步</a><a href="javascript:;" class="disClick">暂停同步</a>'
+                        var state2 = '<a href="javascript:;" class="disClick">开始同步</a><a href="javascript:;" class="tbClick">暂停同步</a>'
+                        var state = '';
+                        if(data[i].synchronizeState == 0){
+                            synchronizeState = '<span>未同步</span>';
+                            // state = state1;
+                        }else if(data[i].synchronizeState == 1){
+                            synchronizeState = '<span class="ok">已同步</span>';
+                            // state = state1;
+                        }else if(data[i].synchronizeState == 2){
+                            synchronizeState = '<span class="ok">已同步</span>';
+                            // state = state1;
+                        }else if(data[i].synchronizeState == 3){
+                            synchronizeState = '<span class="no">同步失败</span>';
+                            // state = state1;
+                        }else if(data[i].synchronizeState == 4){
+                            synchronizeState = '<span class="ok">已同步</span>';
+                            // state = state2;
+                        }else if(data[i].synchronizeState == 5){
+                            synchronizeState = '<span class="ok">已同步</span>';
+                            // state = state1;
+                        }
+
+                        if(data[i].flag == 0){
+                            state = state1;
+                        }else{
+                            state = state2;
+                        }
+
+                        var synchronizePosition = getTime(data[i].synchronizePosition);
+
+
+
+                        str += '<tr dataid="' + data[i].id + '">' +
+                                '  <td>' + eval(i+1) + '</td>' +
+                                '  <td><a href="./examine.html?types=' + data[i].id + '_' + data[i].datatype + '&sourceName=' + data[i].dataSourceName + '">' + data[i].dataSourceName + '</a></td>' +
+                                '  <td>' + datatype + '</td>' +
+                                '  <td>' + synchronizeState + '</td>' +
+                                '  <td>' + data[i].synchronizeCycle + '</td>' +
+                                '  <td>' + synchronizePosition + '</td>' +
+                                '  <td>' + isdelete + '</td>' +
+                                '  <td>' + state +
+                                '    <ul class="layui-nav">' +
+                                '      <li class="layui-nav-item">' +
+                                '          <a href="javascript:;">更多</a>' +
+                                '          <dl class="layui-nav-child" daid="' + data[i].id + '" datype="' + data[i].datatype + '">' +
+                                '              <dd><a href="javascript:;" class="sdtb">手动同步</a></dd>' +
+                                '              <dd><a href="' + editUrl + '?types=' + data[i].id + '_' + data[i].datatype + '">编辑数据源</a></dd>' +
+                                '              <dd><a href="javascript:;" class="del">删除数据源</a></dd>' +
+                                '              <dd><a href="./examine.html?types=' + data[i].id + '_' + data[i].datatype + '&sourceName=' + data[i].dataSourceName + '">查看数据源</a></dd>' +
+                                '          </dl>' +
+                                '      </li>' +
+                                '    </ul>' +
+                                '  </td>' +
+                                '</tr>';
+                        
+                    }
+                    totals = res.total;
+                    $('.totle').text(totals);
+                    $('.dq').text(obj.displayNumber);
+                    $('.ctList').html(str);
+                    layui.use(['element'], function(){
+
+                        var element = layui.element;
+                        element.render();
+                    })
+
+                    // console.log(page);
+
+                }else{
+                    layer.msg(msg.msg);
+                }
+
+                pageFn(totals)
+            },
+            error:function(err){
+                layer.closeAll();
+                console.log(err);
+            }
+        });
+    }
+
+    function pageFn(total){
+        layui.use(['form','laypage'], function() {
+            var form = layui.form;
+            var laypage = layui.laypage;
+
+            laypage.render({
+                elem: 'page1'
+                ,count: total
+                ,curr:jkObj.pageNumber
+                ,limit:jkObj.displayNumber
+                // ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                ,layout: ['prev', 'page', 'next', 'limit', 'skip']
+                ,jump: function(obj,first){
+                    // console.log(obj);
+                    if(!first){
+                        //do something
+                        jkObj.pageNumber = obj.curr;
+                        jkObj.displayNumber = obj.limit;
+                        // getList(kVale,page,limit);
+                        getList(jkObj);
+                    }
+
+                }
+            });
+
+            form.render('checkbox');
+
+        });
+    }
+    function delFn(id,type){
+        $.ajax({
+            url:'/datasource/deleteDatasourceById',
+            type:'post',
+            data:{id:id,datasourcetype:type},
+            success:function(msg){
+                console.log(msg);
+                // return false;
+                if(msg.success) {
+                    layer.msg(msg.msg,{
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        // window.location.reload();
+                        window.location.href = './sjyglList.html';
+                    });
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name=renderer  content=webkit>
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .layui-layer-content.layui-layer-padding{color:#000;}
+        .tsName{position:absolute;z-index:2;width:90%; border: none;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="open">
+<!--    <div>每页显示 8 条 , 当前显示 1-8 条记录</div>-->
+    <form class="layui-form" action="javascript:;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">实体类型</label>
+            <div class="layui-inline">
+                <select name="tsType" class="xzs" lay-search lay-filter="stType" required  lay-verify="required" ></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">实体名</label>
+            <div class="layui-input-block">
+                <input type="text" name="tsName" placeholder="请输入实体名称" required  lay-verify="required" class="layui-input tsName" autocomplete="off" value="">
+                <select name="" class="tsNameSelect" lay-search lay-filter="hc_select"></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文本</label>
+            <div class="layui-input-block">
+                <input type="text" name="tripleFile" placeholder="请输入文本" required  lay-verify="required" class="layui-input" autocomplete="off" value="">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="save">立即提交</button>
+<!--                <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+function child(wordId,wordName,gxaddst){
+    console.log(wordId,wordName);
+    stAllFn();
+
+    // $.cookie('zsusername', '李四');
+    layui.use(['form','layer','laypage'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var laypage = layui.laypage;
+
+        form.render();
+
+        //监听提交
+        form.on('submit(save)', function(data){
+            // layer.msg(JSON.stringify(data.field));
+            console.log(data.field);
+
+            //zsusername 当前用户昵称
+            add(wordId,data.field.tripleFile,data.field.tsName,data.field.tsType,zsusername,gxaddst)
+            // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            // parent.layer.close(index); //再执行关闭
+
+            return false;
+        });
+
+
+        //选择实体类型 改变实体下拉框
+        form.on('select(stType)', function(data){
+            // console.log(data.elem); //得到select原始DOM对象
+            // console.log(data.value); //得到被选中的值
+            // console.log(data.othis); //得到美化后的DOM对象
+
+            stListFn(data.value);
+
+
+
+        });
+
+        form.on('select(hc_select)', function (data) {   //选择移交单位 赋值给input框
+            var select_text = data.elem[data.elem.selectedIndex].text;
+            // console.log(select_text);
+            $(".tsName").val(select_text);
+            $(".tsNameSelect").next().find("dl").css({ "display": "none" });
+            form.render();
+        });
+
+        $('.tsName').on('input propertychange focus', function () {
+            var value = $(".tsName").val();
+            // console.log(value);
+            $(".tsNameSelect").val(value);
+            form.render();
+            $(".tsNameSelect").next().find("dl").show();
+            var dl = $(".tsNameSelect").next().find("dl").children();
+            var j = -1;
+            for (var i = 0; i < dl.length; i++) {
+                if (dl[i].innerHTML.indexOf(value) <= -1) {
+                    dl[i].style.display = "none";
+                    j++;
+                }
+                if (j == dl.length-1) {
+                    $(".tsNameSelect").next().find("dl").hide();
+                }
+            }
+
+        });
+
+        $(document).on('mousedown',function(e){
+            // console.log($(e.target));
+            if(!$(e.target).is($('.tsName')) && !$(e.target).parents('.layui-form-select').prev().is($(".tsNameSelect"))){
+                $(".tsNameSelect").next().find("dl").hide();
+            }
+        });
+
+    });
+}
+
+//查找实体类型
+function stAllFn(){
+    $.ajax({
+        url:'/proofreading/checksubcategories',
+        type:'post',
+        //data:{type:entityType,kw:keyword,results:results,page:page},
+        success:function(msg){
+            console.log(msg);
+            if(msg.success){
+                $('.xzs').html('');
+                var data = JSON.parse(msg.json).allLeafList;
+                console.log(data);
+                var str = '<option value="">不限</option>';
+                for(var i=0; i<data.length; i++){
+                    var seled = '';
+                    // if(data[i].name == names){
+                    //     seled = 'selected';
+                    // }
+                    str += '<option value="' + data[i].name + '" ' + seled + '>' + data[i].name + '</option>';
+                }
+                $('.xzs').append(str);
+                // form.render('select');
+                layui.use('form', function() {
+                    var form = layui.form;
+                    form.render('select');
+                });
+            }
+        },
+        error:function(err){
+            console.log(err);
+        }
+    });
+}
+
+//当前实体类型下 的 实体列表
+function stListFn(entitytype){
+    $.ajax({
+        url:'/proofreading/queryentitynamebyentitytype',
+        type:'post',
+        data:{entitytype:entitytype},
+        success:function(msg){
+            console.log(msg);
+            if(msg.success){
+                var sele = JSON.parse(msg.json).entitynamelist;
+                $(".tsName").val('');
+                $(".tsNameSelect").val('');
+                var str = '';
+
+                for(var i=0; i<sele.length; i++){
+                    str += '<option value="' + sele[i] + '">' + sele[i] + '</option>';
+                }
+
+                $('.tsNameSelect').html(str);
+
+                layui.use('form', function() {
+                    var form = layui.form;
+                    form.render('select');
+                });
+
+            }else{
+                layer.msg(msg.msg);
+            }
+        },
+        error:function(err){
+            console.log(err);
+        }
+    });
+}
+
+function add(datasourceid,tripleFile,subject,object,proofReader,gxaddst){
+    $.ajax({
+        url:'/proofreading/savetriplet',
+        type:'post',
+        data:{datasourceid:datasourceid,tripleFile:tripleFile,subject:subject,predicate:'是',object:object,unit:'',predicateType:0,proofReader:proofReader},
+        success:function(msg){
+            console.log(msg);
+            if(msg.success){
+                // var data = JSON.parse(msg.json);
+                layer.msg(msg.msg,{
+                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    // parent.window.location.reload();
+                    if(gxaddst){
+                        // parent.GetValue();
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    }else{
+                        parent.window.location.reload();
+                    }
+                });
+
+            }else{
+                layer.msg(msg.msg);
+            }
+        },
+        error:function(err){
+            console.log(err);
+        }
+    });
+}
+</script>
+</body>
+</html>

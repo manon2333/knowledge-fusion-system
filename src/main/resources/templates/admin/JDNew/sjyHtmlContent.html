@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/js/css/laydateTab.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/lay/modules/laydate.js"></script>
+    <script type="text/javascript" src="/js/laydateTab.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/xm-select.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/lib/echarts/world.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <script type="text/javascript" src="/js/map_api.min.js"></script>
+    <style>
+        .layui-input, .layui-select, .layui-textarea{height: 24px; font-size:12px;}
+        .tsElect .layui-input, .layui-select, .layui-textarea{ font-size:18px;}
+        .layui-form-label{font-size:12px; line-height: 24px; padding:0; width: 100px; text-align:left; font-weight: bold;}
+        .gxList span{display:inline-block; margin-right:8px; text-align: center;}
+        .gxList span.cos1{width:120px;}
+        .gxList span.cos2{width:60px;}
+        .gxList span.cos3{width:120px;}
+        .gxList span.cos4{width:80px; margin:0;}
+        .layui-btn+.layui-btn{margin:0;}
+        xm-select{min-height: 24px; font-size: 12px; line-height: 24px;}
+        xm-select .xm-label .xm-label-block { height: 16px; line-height: 16px; }
+        #stName xm-select .xm-label .scroll .label-content{line-height: 20px; color: #000;}
+        #stName xm-select *{font-size:12px;}
+        .layui-carousel{display:inline-block;}
+        .pictureEdit{vertical-align: top; margin-left:50px; margin-top:175px;}
+
+        #imgs{width:100px; height:100px; position:relative; border: 1px dashed#fff; border-radius: 10px; overflow:hidden;}
+        #imgs img{width:100%; height:0100%; position:absolute; top:0; left:0; z-index:0}
+        #imgs .test1{width:100%; height:100%; position:absolute; top:0; left:0; z-index:2; background:url("/images/imgAdd_01.png") no-repeat rgba(255, 255, 255, 0.2); background-size:50%; background-position:center center;}
+        .stxqList h5{font-size:18px;}
+        .titbj{ margin-bottom: 12px;}
+        .sxStyle{font-weight: 600; font-size: 16px; color: #D7D7D7; line-height: 30px; border-bottom: 1px solid #334e67; margin-bottom: 10px;}
+        .gxList>div>span{color:#6498BB; font-size: 16px;}
+        .layui-layedit{background:#fff;}
+        .comment .contBox .sub h3{width:100%}
+        /*.titles{width:80%;}*/
+        /*.titles .layui-input{height: 42px; font-size: 16px; font-weight: 500;}*/
+        .bz{border-bottom: 1px dashed #0495D4; margin-bottom:20px; padding-left: 68px; margin-top:10px;}
+        .bz a{margin-left:20px;}
+        b.del{margin-top:4px;}
+        .content *{color:#D7D7D7 !important; background: transparent !important;}
+        .layui-form-select dl{top:25px;}
+        .layui-form-selectup dl {top: auto;bottom: 25px;}
+        .layui-form-select dl dd, .layui-form-select dl dt{line-height:24px;}
+        .layui-input-block{margin-left:100px; min-height: 24px;}
+        .layui-input-block p{line-height:24px;}
+        .inpList .layui-btn{height: 24px; line-height: 24px; padding:0 4px; background: none; color: #aaa;}
+        .inpList .layui-btn:hover{ color:#0280b4;}
+        .gxList  .layui-btn{ background: none; color: #aaa;}
+        .gxList .layui-btn:hover{ color:#0280b4;}
+        .inpList .disNone{display:none;}
+        .thEdit{border-bottom: 1px solid #fff; padding-bottom: 10px;}
+        .inpList .thwb{cursor:pointer; display:none; }
+        .thwb img{width: 100%; height: 100%;}
+        .thEdit .layui-upload-choose{max-width: 100px; overflow: hidden;}
+        .gxList .layui-row>div{text-align:center;}
+        .lscfGXDiv{display:none;}
+        .gxAddMbDiv{display:none;}
+        .gxAddMB .tripleFile{width: 90%; //margin: 0 auto;}
+        .layui-form-item .layui-input-inline{margin:0;}
+        .content{height:650px; overflow-y: auto;overflow-x: hidden;}
+        .inpList{height:650px; overflow-y: auto;overflow-x: hidden;}
+        /*.gxList ul{height:650px; overflow-y: auto;overflow-x: hidden;}*/
+        .cn1_ls{height:650px; overflow-y: auto;overflow-x: hidden;}
+        #sourceName{color:#0495D4;}
+        /*::-webkit-scrollbar {*/
+        /*    !*滚动条整体样式*!*/
+        /*    width : 10px;  !*高宽分别对应横竖滚动条的尺寸*!*/
+        /*    height: 1px;*/
+        /*}*/
+        /*::-webkit-scrollbar-thumb {*/
+        /*    !*滚动条里面小方块*!*/
+        /*    border-radius: 10px;*/
+        /*    box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);*/
+        /*    background   : #383838;*/
+        /*}*/
+        /*::-webkit-scrollbar-track {*/
+        /*    !*滚动条里面轨道*!*/
+        /*    box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);*/
+        /*    border-radius: 10px;*/
+        /*    background   : #ededed;*/
+        /*}*/
+        .layui-form-item .fwBox{width:140px;}
+        .layui-form-item .fwBox .layui-input-inline{width:140px;}
+        .layui-form-mid{padding: 2px 0!important;}
+
+        .inpList .bjCls .layui-form-label{color:red;}
+        .bj .thEdit{display:none;}
+        .bj .thwb{display:block;}
+        .bjCls .layui-row>div{color:red;}
+    </style>
+</head>
+<body class="comment ifra">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="content">
+    <div class="contBox" id="conts">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs7">
+                <div class="cBox box_l">
+                    <div class="sub">
+                        <div class="sub_head">
+                            <h3>
+                                <b class="blog g-off">未校对</b>
+                                <span class="titles"></span>
+<!--                                <div class="layui-input-inline titles">-->
+<!--                                    <input type="text" name="title" value="西奥多·罗斯福号航空母舰" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">-->
+<!--                                </div>-->
+                            </h3>
+                            <div class="bz">
+                                <span id="sourceName">环球网</span>
+<!--                                <a href="javascript:;">原文链接</a>-->
+                                <span class="updateTime"></span>
+                                <b class="del del1 fr delSt" title="删除"></b>
+                            </div>
+                        </div>
+                        <div class="sub_body">
+<!--                            <input type="text" id="timess">-->
+                            <div class="content">
+                                                      西奥多·罗斯福号航空母舰（USS Theodore Roosevelt CVN-71），或罗斯福号航空母舰，是美国尼米兹级核动力航空母舰的四号舰，起造于1981年，于1984年正式下水。西奥多·罗斯福是美国第26任总统（任期1901年—1909年），是个海军迷，任期内大力扩充海军，也在他任内完成了大白舰队计划。昵称“T.R.”的罗斯福号是美国海军第一艘以西奥多·罗斯福总统命名的航空母舰，但除了该舰外，美国海军其实曾拥有过另一艘以罗斯福为名的航空母舰──以第32任总统富兰克林·罗斯福命名的富兰克林·D·罗斯福号（USS Franklin D. Roosevelt CVB-42）。
+                            </div>
+<!--                            <textarea id="demo" style="display: none;"></textarea>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs5">
+                <div class="cBox box_r ">
+                    <div class="cbn cb_nav1 clearfix">
+                        <div class="layui-tab-content stTab">
+                            <div class="layui-tab-item layui-show">
+                                <form class="layui-form clearfix tit" action="javascript:;">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="color: #027DB4; width:60px;">实体类型</label>
+                                        <div class="layui-inline" style="width:160px;">
+                                            <select name="" class="xzs" lay-search lay-filter="typeSh">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="color: #027DB4; width:60px; margin-left:20px;">实体名称</label>
+                                        <div class="layui-inline" style="width:160px;">
+                                            <input type="text" name="entityName" placeholder="请输入标题" autocomplete="off" class="layui-input stNamet">
+                                        </div>
+                                    </div>
+                                    <!--                                <span class="fr">本文共识别到4个实体</span>-->
+                                </form>
+                                <div class="cn1_ls">
+                                    <ul class="stList">
+                                        <!--<li>
+                                             <span class="tit">西奥多·罗斯福号航空母舰<b class="new">新</b></span>
+                                             <span class="sx">实体属性</span>
+                                             <span class="sx">实体关系</span>
+                                             <b class="del del1"></b>
+                                         </li>-->
+                                    </ul>
+                                    <div class="addSt"><span class="add"><b></b>添加实体</span></div>
+                                </div>
+                                <div class="layui-input-block" style="margin: 40px 0 0 0;text-align: center;">
+                                    <button class="layui-btn" lay-submit lay-filter="saveSts">校对完成</button>
+                                    <a href="javascript:;" onclick="fhListFn()" class="layui-btn layui-btn-primary">返回</a>
+                                </div>
+                            </div>
+                            <div class="layui-tab-item" id="stxqData">
+                                <div class="layui-tab stxqList">
+                                    <div class="clearfix titbj">
+                                        <h5 class="fl"><input type="text" name="tit"><button type="button" class="editTit layui-btn layui-btn-xs layui-btn-normal">修改实体名称</button></h5>
+
+                                        <div class="fr">
+                                            <!--                                        <b class="edit edit1" title="编辑"></b>-->
+                                            <b class="del del1 stDel" title="删除"></b>
+                                            <b class="back" title="返回"></b>
+                                        </div>
+                                        <div class="fr">
+                                            <form class="layui-form clearfix tit" action="javascript:;" lay-filter="editType">
+                                                <div class="layui-inline">
+                                                    <!-- <label class="layui-form-label" style="color: #027DB4;">实体类型</label>-->
+                                                    <div class="layui-inline tsElect" style="width:160px;">
+                                                        <select name="editt" lay-verify="required" class="xzs2 editType" lay-search lay-filter="editt">
+                                                        </select>
+                                                    </div>
+                                                    <div class="layui-inline">
+                                                        <button type="button" lay-submit class="layui-btn layui-btn-xs layui-btn-normal" lay-filter="edit">修改实体类型</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this">实体属性</li>
+                                        <li>实体关系</li>
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show">
+                                            <form class="layui-form" action="javascript:;">
+                                                <!--                                            <div class="layui-form-item">-->
+                                                <!--                                                <label class="layui-form-label">实体名称</label>-->
+                                                <!--                                                <div class="layui-input-block">-->
+                                                <!--                                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">-->
+                                                <!--                                                </div>-->
+                                                <!--                                            </div>-->
+<!--                                                <div class="layui-form-item">-->
+<!--                                                    <label class="layui-form-label">图片</label>-->
+<!--                                                    <div class="layui-input-block">-->
+<!--                                                        <input type="text" placeholder="请输入图片URL" id="别名" autocomplete="off" class="layui-input">-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <div class="layui-form-item">-->
+<!--                                                    <label class="layui-form-label">图片</label>-->
+<!--                                                    <div class="layui-input-block">-->
+<!--                                                        <div id="imgs">-->
+<!--                                                            <img src="" alt="">-->
+<!--                                                            <div id="test1"></div>-->
+<!--                                                            <div id="test9" style="display:none;"></div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <div class="layui-form-item">-->
+<!--                                                    <label class="layui-form-label">摘要</label>-->
+<!--                                                    <div class="layui-input-block">-->
+<!--                                                        <textarea name="" placeholder="请输入摘要" id="description" class="layui-textarea"></textarea>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <h6 class="sxStyle">属性</h6>-->
+                                                <div class="inpList">
+<!--                                                    <div class="layui-form-item">-->
+<!--                                                        <label class="layui-form-label">输入框</label>-->
+<!--                                                        <div class="layui-input-block">-->
+<!--                                                            <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+                                                </div>
+<!--                                                <div class="layui-form-item">-->
+<!--                                                    <div class="layui-input-block">-->
+<!--                                                        <button class="layui-btn" lay-submit lay-filter="saveSx">保存属性</button>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+                                            </form>
+                                            <button class="layui-btn sxZtSavr">保存</button>
+                                        </div>
+                                        <div class="layui-tab-item gxList">
+                                            <div class="layui-row layui-col-space10">
+                                                <div class="layui-col-md6">
+                                                    <button class="layui-btn layui-btn-xs layui-btn-normal addst2">添加实体</button>
+                                                </div>
+                                                <div class="layui-col-md6">
+                                                    <button class="layui-btn layui-btn-xs layui-btn-normal addGx">添加关系</button>
+                                                </div>
+                                            </div>
+                                            <ul>
+                                            </ul>
+                                            <div class="lscfGXDiv"></div>
+                                            <div class="gxAddMbDiv">
+                                                <form class="layui-form gxAddMB" action="javascript:;" lay-filter="gxAddMB">
+<!--                                                        <div class="layui-row layui-col-space10" >-->
+<!--                                                            <div class="layui-col-md3">-->
+<!--                                                            </div>-->
+<!--                                                            <div class="layui-col-md1">-->
+<!--                                                                <input type="number" class="objectAmount" name="objectAmount" style="width: 100%;">-->
+<!--                                                            </div>-->
+<!--                                                            <div class="layui-col-md2">-->
+<!--                                                                <select name="relation" class="relation" lay-filter="relation">-->
+<!--                                                                </select>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="layui-col-md3">-->
+<!--                                                                <select name="stName" class="stName"  lay-search lay-filter="stName">-->
+<!--                                                                </select>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="layui-col-md1">-->
+<!--                                                                <input type="number" class="subjectAmount" name="subjectAmount" style="width: 100%;">-->
+<!--                                                            </div>-->
+<!--                                                            <div class="layui-col-md2">-->
+<!--    &lt;!&ndash;                                                            <b class="ico_th" title="交换实体顺序"></b>&ndash;&gt;-->
+<!--                                                                <button class="layui-btn layui-btn-xs layui-btn-normal gxSave">保存</button>-->
+<!--                                                                <button class="layui-btn layui-btn-xs layui-btn-normal gxCancel">取消</button>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="layui-block">-->
+<!--                                                            <div class="layui-input-block">-->
+<!--                                                                <input type="text" name="tripleFile" value="" autocomplete="off" class="layui-input tripleFile">-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+
+                                                    <div class="thwb">
+                                                        <div class="layui-form-item layui-row">
+                                                            <div class="layui-col-md8">
+                                                                <label class="layui-form-label">实体名称</label>
+                                                                <div class="layui-input-inline stmc1" style="width: 300px;">
+<!--                                                                        <input type="text" name="" autocomplete="off" class="layui-input">-->
+<!--                                                                        <input type="number" class="objectAmount layui-input" name="objectAmount" style="width: 100%;" autocomplete="off" >-->
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-col-md4">
+                                                                <label class="layui-form-label" style="width:20%;">数量</label>
+                                                                <div class="layui-input-inline" style="width:80%;">
+<!--                                                                        <input type="text" name="" autocomplete="off" class="layui-input">-->
+                                                                    <input type="number" class="objectAmount" name="objectAmount" style="width: 100%;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item layui-row">
+                                                            <div class="layui-col-md8">
+                                                                <label class="layui-form-label">关系</label>
+                                                                <div class="layui-input-inline" style="width: 300px;">
+                                                                    <select name="relation" class="relation" lay-filter="relation">
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-col-md4">
+<!--                                                                    <b class="ico_th" title="交换实体顺序"></b>-->
+                                                                <button class="layui-btn layui-btn-xs layui-btn-normal gxSave">保存</button>
+                                                                <button class="layui-btn layui-btn-xs layui-btn-normal gxCancel">取消</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item layui-row">
+                                                            <div class="layui-col-md8">
+                                                                <label class="layui-form-label">实体名称</label>
+                                                                <div class="layui-input-inline" style="width: 300px;">
+<!--                                                                    <select name="stName" class="stName"  lay-search lay-filter="stName">-->
+<!--                                                                    </select>-->
+                                                                    <div id="stName" class="xm-select-demo stName"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-col-md4">
+                                                                <label class="layui-form-label" style="width:20%;">数量</label>
+                                                                <div class="layui-input-inline" style="width:80%;">
+<!--                                                                        <input type="text" name="" autocomplete="off" class="layui-input">-->
+                                                                    <input type="number" class="subjectAmount" name="subjectAmount" style="width: 100%;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">文本</label>
+                                                            <div class="layui-input-inline" style="width: 500px;">
+<!--                                                                    <input type="text" name="" autocomplete="off" class="layui-input">-->
+                                                                <input type="text" name="tripleFile" value="" autocomplete="off" class="layui-input tripleFile">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+<!--                                                <div class="layui-form-item" style="margin-top:20px;">-->
+<!--                                                    <div class="layui-input-block">-->
+<!--                                                        <button class="layui-btn" lay-submit lay-filter="saveGx">保存关系</button>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var conId = getUrlParam('sjyId');
+    var datasourceId = getUrlParam('id');
+    var datasourcetype = getUrlParam('datasourcetype');
+    var sourceName = getUrlParam('sourceName');
+    var isEntitiesNew = {};
+    var indId = '';
+    var wordName = ''; //文章名字
+    var wordStatus = ''; //文章状态
+    var xzStName = ''; //选中实体的名字
+    var gxEdit = false; //关系编辑状态
+    var ctype = ''; //实体类型id记录
+    var ctypeName = ''; //实体类型name记录
+    var pictureSrc = {}; //图片路径
+    var pictureSrcId = ''; //图片路径 id 用来存放当前编辑图片的索引  pictureSrc[pictureSrcId]
+    var entityTypeStatus = ''; //实体status记录 实体名 实体类型 标记状态
+    var titObj = {} //存放选中的实体名称三元组实体
+    var timeNum = 0;
+    var timeArr = [];
+    $.cookie('bzConPd',true);
+    layui.use(['form','layer','element','upload','layedit','laydate'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        $('#sourceName').text(sourceName);
+        form.render();
+
+
+        //根据实体类型搜索
+        form.on('select(typeSh)', function (data) {   //选择移交单位 赋值给input框
+            // console.log(data);
+            var na = $('.stNamet').val();
+            rightConFn(data.value,na);
+            form.render();
+        });
+
+        $('.stNamet').on('keypress ',function(e){
+
+            e = event ? event : (window.event ? window.event : null);
+            var currKey = 0;
+            currKey = e.keyCode || e.which || e.charCode;
+            if (currKey == 13) {
+                var xzsa = $('.xzs').val();
+                var na = $('.stNamet').val();
+                rightConFn(xzsa,na);
+            }
+        });
+
+        getStTypeList();
+        function getStTypeList(){
+            //获取该实体下 所有添加的实体类型
+            $.ajax({
+                url:'/proofreading/checkEntityType',
+                type:'post',
+                data:{datasourceid:conId + '_' + datasourceId},
+                success:function(msg){
+                    // console.log(msg);
+                    if(msg.success){
+                        var data = JSON.parse(msg.json).entityTypeList;
+                        var str = '<option value=""></option>';
+                        for(var i=0; i<data.length; i++){
+                            str += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                        }
+                        $('.xzs').html(str);
+                        form.render();
+
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+
+
+        //左侧 文章 内容
+        $.ajax({
+            url:'/proofreading/enterDetailsPage',
+            type:'post',
+            data:{id:conId,datasourceId:datasourceId},
+            success:function(msg){
+
+                if(msg.success) {
+                    var res = JSON.parse(msg.json);
+                    console.log(res);
+                    $('.content').html(res.content);
+                    wordName = res.title
+                    wordStatus = res.status
+                    $('.titles').text(wordName);
+                    var update_time = getTime(res.update_time);
+                    $('.bz span.updateTime').text(update_time);
+                    if(res.status == 1){
+                        $('.blog').removeClass('g-off');
+                        $('.blog').addClass('g-on');
+                        $('.blog').text('已校对');
+                    }else if(res.status == 2){
+                        $('.blog').removeClass('g-off');
+                        $('.blog').addClass('g-on2');
+                        $('.blog').text('已通过');
+                    }else if(res.status == 3){
+                        $('.blog').removeClass('g-off');
+                        $('.blog').addClass('g-on3');
+                        $('.blog').text('已打回');
+                    }else if(res.status == 4){
+                        $('.blog').removeClass('g-off');
+                        $('.blog').addClass('g-on4');
+                        $('.blog').text('已返工');
+                    }
+
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+
+
+        //右侧 实体 关系 列表
+        rightConFn('','');
+        //右侧 实体 关系 列表
+        function rightConFn(entityType,entityName){
+            $.ajax({
+                url:'/proofreading/getAllEntity',
+                type:'post',
+                data:{datasourceId:conId + '_' + datasourceId,entityType:entityType,entityName:entityName},
+                success:function(msg){
+
+                    if(msg.success) {
+                        var res = JSON.parse(msg.json);
+                        var entities = res.entity;
+                        // isEntitiesNew = res.isEntitiesNew;
+                        console.log(entities);
+                        var str = '';
+
+                        for(var k in entities){
+                            var licls = '';
+                            if(entities[k].isPass > 0){
+                                licls = 'isPass';
+                            }
+                            str += '<li class="' + licls + '" status="' + entities[k].entityTypeStatus + '" infoId="' + entities[k].entityTypeId + '" infoName="' + entities[k].entityType + '">' +
+                                '    <span class="tit">' + entities[k].entity + '</span>' +
+                                '    <span class="sx">实体属性</span>' +
+                                '    <span class="sx gx">实体关系</span>' +
+                                '    <b class="del del1" title="删除"></b>' +
+                                '</li>';
+                        }
+                        // console.log(str)
+                        $('.stList').html(str);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+
+
+        //点击文章关联实体 右侧显示 实体属性 与 实体关系
+        $('.content').on('click','.clsSt',function(){
+            var indId = $(this).attr('data-id');
+            showStFn(indId);
+        });
+
+        //右侧显示 点击实体属性 与 实体关系
+        $('.stTab').on('click','.sx',function(){
+            var p  = $(this).parents('li');
+            var type = $(this).text();
+
+            entityTypeStatus = p.attr('status');
+            xzStName = p.find('.tit').text();
+            ctype = p.attr('infoid');
+            ctypeName = p.attr('infoname');
+
+            //获取所有可供选择的实体类型
+            $.ajax({
+                url:'/proofreading/checkBrothers',
+                type:'post',
+                data:{categoryId:ctype},
+                success:function(msg){
+                    console.log(msg);
+                    if(msg.success){
+                        var data = JSON.parse(msg.json).brotherlist;
+                        var str = '<option value=""></option>';
+                        for(var k in data){
+                            str += '<option value="' + k + '">' + data[k] + '</option>';
+                        }
+                        $('.xzs2').html(str);
+                        form.val("editType", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                            "editt": ctype // "name": "value"
+                        });
+                        form.render();
+                        if(entityTypeStatus == '0'){
+                            $('.stxqList .titbj').css('border','1px solid red');
+                        }
+
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+
+
+            // 查看实体属性
+            ckStSxFn(ctype,xzStName);
+            // 查看下拉框关系列表
+            ckGXlistFN(ctype);
+            // 查看实体关系列表
+            ckStGxFn(xzStName);
+            // 查看实体列表
+            showStFn(type,xzStName);
+        });
+
+
+
+        //点击 显示 编辑单条实体属性
+        $('.inpList').on('click','.thwb',function(){
+            console.log($(this));
+            if($(this).find('.test1').length != 0){
+                return false;
+            }
+            var p = $(this).parents('.layui-form-item');
+            var thEdit = p.find('.thEdit');
+            $(this).hide();
+            thEdit.show();
+        });
+
+        // //点击取消
+        // $('.inpList').on('click','.qxBtn',function(){
+        //
+        // });
+
+        //点击保存 编辑单条实体属性
+        $('.inpList').on('click','.layui-btn',function(){
+            console.log($(this));
+            var p = $(this).parents('.layui-form-item');
+            var thEdit = p.find('.thEdit');
+            var thwb = p.find('.thwb');
+            var fwzhBtn = p.find('.fwzhBtn');
+            var thids = p.attr('dataId');
+            var strId = conId + '_' + id;  //数据源id + 新闻id 列76_1
+            var tripleFile = p.find('.tripleFile').val();
+            var predicate = p.find('.predicate').text();
+            var object = p.find('.attrValue').val();
+            var unit = p.find('.unit').val() == null ? '' : p.find('.unit').val();
+            var range = fwzhBtn.attr('range');
+
+            if(range == 1 && !$(this).hasClass('fwzhBtn')){
+
+                if(p.find('.attrValue').eq(0).val() == '' || p.find('.attrValue').eq(1).val() == ''){
+                    layer.msg('范围值不能为空！');
+                    return false;
+                }
+
+                object = p.find('.attrValue').eq(0).val() + '@#@' + p.find('.attrValue').eq(1).val()
+            }
+            if($(this).hasClass('psar')){
+                return false;
+            }
+
+            if($(this).hasClass('psarSave')){
+                object = pictureSrc[thids]
+                // return false;
+            }
+
+            if($(this).hasClass('fwzhBtn')){
+                var fwStr = '';
+                if(range == '1'){
+                    fwStr = '<div class="layui-input-inline">' +
+                        '       <input type="text" name="attrValue" value="" autocomplete="off" class="layui-input attrValue">' +
+                        '   </div>';
+                    $(this).attr('range','0');
+                }else{
+                    fwStr = '<div class="layui-input-inline" style="width: 50px;">' +
+                        '        <input type="number" name="range_min" autocomplete="off" class="layui-input attrValue">' +
+                        '      </div>' +
+                        '      <div class="layui-form-mid">-</div>' +
+                        '      <div class="layui-input-inline" style="width: 50px;">' +
+                        '        <input type="number" name="range_max" autocomplete="off" class="layui-input attrValue">' +
+                        '      </div>';
+                    $(this).attr('range','1');
+                }
+                p.find('.fwBox').html(fwStr);
+                return false;
+            }
+            // return false;
+            if($(this).hasClass('qxBtn')){
+                thwb.show();
+                thEdit.hide();
+                return false;
+            }
+
+            if((object == '' && tripleFile != '') || (object == '' && unit != '')){
+                if(predicate != '描述'){
+                    layer.msg('属性值不能为空！');
+                    return false;
+                }
+            }
+
+            // var pid = addStSx(thids,strId,tripleFile,wordName,predicate,object,unit,zsusername);
+            var ajaxObj = {id:thids,datasourceid:strId,tripleFile:tripleFile,subject:xzStName,predicate:predicate,object:object,unit:unit,predicateType:1,proofReader:zsusername};
+
+            if($(this).hasClass('pictureEdit')){
+                layer.open({
+                    id:'stAdd',
+                    type: 2,
+                    title:'编辑图片',
+                    shade: 0.5,
+                    area: ['900px', '600px'],
+                    content: '../menuOpen/pictureEdit.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    success: function(layero, index){
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        var strId = conId + '_' + id;
+                        // pictureSrcId = thids == '' ? 'undefined' : thids;
+                        pictureSrcId = thids;
+                        ajaxObj.object = pictureSrc[pictureSrcId];
+                        iframeWin.child(strId,wordName,ajaxObj);
+                    },
+                    end: function(layero, index){
+                        ckStSxFn(ctype,xzStName);
+                    }
+                });
+                return false;
+            }
+
+            $.ajax({
+                url:'/proofreading/savetriplet',
+                type:'post',
+                data:ajaxObj,
+                success:function(msg){
+                    // console.log(msg);
+                    if(msg.success){
+                        var data = JSON.parse(msg.json);
+                        if(data != null){
+                            p.attr('dataid',data.id)
+                        }
+
+                        if(predicate == '图片'){
+                            thwb.find('img').prop('src',object);
+                        }else{
+                            if(object.indexOf('@#@') != -1){
+                                thwb.find('p').text(object.split('@#@').join(','));
+                            }else{
+                                thwb.find('p').text(object + unit);
+                            }
+
+                        }
+
+                        if(range == 1){
+                            var fwz = p.find('.attrValue').eq(0).val() + ' ~ ' + p.find('.attrValue').eq(1).val()
+                            thwb.find('p').text(fwz + unit);
+                        }
+
+                        thEdit.hide();
+                        thwb.show();
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+
+        });
+
+        $('.sxZtSavr').on('click', function(){
+            var objArr = [];
+            var doc = $('.inpList').find('.layui-form-item');
+            // console.log(doc);
+            // console.log(doc.eq(0));
+
+            var strId = conId + '_' + id;  //数据源id + 新闻id 列76_1
+
+            for(var i=0; i<doc.length; i++){
+                var p = doc.eq(i);
+                var thEdit = p.find('.thEdit');
+                var thwb = p.find('.thwb');
+                var fwzhBtn = p.find('.fwzhBtn');
+                var thids = p.attr('dataId');
+                var tripleFile = p.find('.tripleFile').val();
+                var predicate = p.find('.predicate').text();
+                var object = p.find('.attrValue').val();
+                var unit = p.find('.unit').val() == null ? '' : p.find('.unit').val();
+                var range = fwzhBtn.attr('range');
+                if(range == 1){
+                    object = p.find('.attrValue').eq(0).val() + '@#@' + p.find('.attrValue').eq(1).val()
+                }
+                if(!p.hasClass('picType')){
+                    if(object != '' || thids != ''){
+                        if(thids == ''){
+                            objArr.push({
+                                // id:thids,
+                                datasourceid:strId,
+                                tripleFile:tripleFile,
+                                subject:xzStName,
+                                predicate:predicate,
+                                object:object,
+                                unit:unit,
+                                predicateType:1,
+                                // proofReader:zsusername
+                            })
+                        }else{
+                            objArr.push({
+                                id:thids,
+                                datasourceid:strId,
+                                tripleFile:tripleFile,
+                                subject:xzStName,
+                                predicate:predicate,
+                                object:object,
+                                unit:unit,
+                                predicateType:1,
+                                // proofReader:zsusername
+                            })
+                        }
+
+                    }
+                }
+
+            }
+
+            var objStr = JSON.stringify(objArr);
+            console.log(objStr);
+            $.ajax({
+                url:'/proofreading/savealltriplet',
+                type:'post',
+                dataType:"JSON",
+                contentType:"application/json",
+                data:objStr,
+                success:function(msg){
+                    console.log(msg);
+                    if(msg.success){
+                       $('.back').click();
+                        layer.msg(msg.msg);
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+
+        });
+
+        //展示 实体属性 与 实体关系 的方法
+        function showStFn(type,title){
+            // $('.stxqList h5').text(xzStName);
+            $('.stxqList h5 input').val(xzStName);
+            // $('.gxAddMB').find('.layui-col-md3').eq(0).text(title);
+            $('.gxAddMB').find('.stmc1').text(title);
+
+            if(type == '实体关系'){
+                $('.stxqList .layui-tab-title li').eq(0).removeClass('layui-this');
+                $('.stxqList .layui-tab-title li').eq(1).addClass('layui-this');
+                $('.stxqList .layui-tab-item').eq(0).removeClass('layui-show');
+                $('.stxqList .layui-tab-item').eq(1).addClass('layui-show');
+            }else{
+                $('.stxqList .layui-tab-title li').eq(1).removeClass('layui-this');
+                $('.stxqList .layui-tab-title li').eq(0).addClass('layui-this');
+                $('.stxqList .layui-tab-item').eq(1).removeClass('layui-show');
+                $('.stxqList .layui-tab-item').eq(0).addClass('layui-show');
+            }
+            $('.stTab>.layui-tab-item').eq(0).removeClass('layui-show');
+            $('.stTab>.layui-tab-item').eq(1).addClass('layui-show');
+        }
+
+        //添加关系
+        $('.addGx').on('click',function(){
+            if(gxEdit){
+                layer.msg('您正在编辑状态中，请先退出编辑状态！');
+                return false;
+            }
+            // $('.gxAddMB').find('.layui-col-md3').eq(0).text(xzStName);
+            $('.gxAddMB').find('.stmc1').text(xzStName);
+            var newLi = $('<li>').append($('.gxAddMB'));
+            newLi.prependTo($('.gxList ul'));
+            ckSTlistFN()
+            demo1.setValue([]);
+        });
+
+        // 关系编辑按钮
+        $('.gxList').on('click','.gxEdit',function(){
+            if(gxEdit){
+                layer.msg('您正在编辑状态中，请先退出编辑状态！');
+                return false;
+            }
+            gxEdit = true;
+            var newLi = $(this).parents('li');
+            // $('.lscfGXDiv').html('');
+            $('.lscfGXDiv').append(newLi.find('.thwb'));
+            var val1 = $('.lscfGXDiv').find('.stmc1s').text();
+            var num1 = $('.lscfGXDiv').find('.stnum1s').text();
+            var val2 = $('.lscfGXDiv').find('.stgx1s').text();
+            var val3 = $('.lscfGXDiv').find('.stmc2s').text();
+            var num3 = $('.lscfGXDiv').find('.stnum2s').text();
+            var val4 = $('.lscfGXDiv').find('.tripleFile').val();
+
+            console.log(val1,xzStName);
+            ckSTlistFN(ctype,val2)
+
+            if(val1 != xzStName){
+                dhGxWzFn();
+                // $('.gxAddMB').find('.layui-col-md3').eq(1).text(val3);
+                $('.gxAddMB').find('.stmc1').text(val3);
+                form.val("gxAddMB", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                    "relation": val2 // "name": "value"
+                    ,"objectAmount": num3 // "name": "value"
+                    // ,"stName": val1
+                    ,"tripleFile": val4
+                    ,"subjectAmount": num1
+                });
+                demo1.setValue([{name: val1, value: val1}]);
+            }else{
+                // $('.gxAddMB').find('.layui-col-md3').eq(0).text(val1);
+                $('.gxAddMB').find('.stmc1').text(val1);
+                form.val("gxAddMB", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                    "relation": val2 // "name": "value"
+                    ,"objectAmount": num1
+                    // ,"stName": val3
+                    ,"tripleFile": val4
+                    ,"subjectAmount": num3
+                });
+
+                demo1.setValue([{name: val3, value: val3}]);
+            }
+            form.render();
+            newLi.append($('.gxAddMB'));
+            return false;
+        })
+
+        // 点击取消 -- 关系添加 & 保存
+        $('.gxList').on('click','.gxCancel',function(){
+            gxEdit = false;
+            var newLi = $(this).parents('li');
+            qxGxAddFn();
+            newLi.append($('.lscfGXDiv').find('.thwb'));
+        })
+
+        $('.ico_th').on('click',function(){
+            dhGxWzFn()
+        });
+
+        //调换关系位置顺序
+        function dhGxWzFn(){
+            var a = $('.gxAddMB').find('.layui-form-item').eq(0)
+            // var a1 = $('.gxAddMB').find('.layui-col-md1').eq(0)
+            var b = $('.gxAddMB').find('.layui-form-item').eq(2)
+            // var b1 = $('.gxAddMB').find('.layui-col-md1').eq(1)
+
+            var n = a.next(), p = b.prev();
+            b.insertBefore(n);
+            a.insertAfter(p);
+
+
+            // var n1 = a1.next(), p1 = b1.prev();
+            // b1.insertBefore(n1);
+            // a1.insertAfter(p1);
+            // $('.gxAddMB').find('.relation');
+        }
+
+        //取消关系添加
+        function qxGxAddFn(){
+            $('.gxAddMbDiv').append($('.gxAddMB'));
+            var pds2 = $('.gxAddMB').find('.layui-form-item').eq(2).find('.stmc1');
+            if(pds2.length > 0){
+                dhGxWzFn();
+            }
+            form.val("gxAddMB", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                "relation": "" // "name": "value"
+                ,"stName": ""
+                ,"tripleFile": ""
+                ,"objectAmount": ""
+                ,"subjectAmount": ""
+            });
+            form.render();
+        }
+
+
+        //关系添加 & 保存
+        $('.gxList').on('click','.gxSave',function(){
+            var newLi = $(this).parents('li');
+            // var st2 = newLi.find('.stName');
+            var st2 = $('.gxAddMB').find('.layui-form-item').eq(2).find('.stmc1');
+            var val1 = '';
+            var val2 = '';
+            var val3 = newLi.find('.relation').val();
+
+            var num1 = '';
+            var num2 = '';
+
+            if(st2.length > 0){
+                // val1 = st2.val();
+                val1 = newLi.find('input[name=stName]').val() == null ? '' : newLi.find('input[name=stName]').val();
+                // val2 = newLi.find('.layui-col-md3').eq(1).text();
+                val2 = newLi.find('.stmc1').text();
+                num1 = newLi.find('.subjectAmount').val();
+                num2 = newLi.find('.objectAmount').val();
+
+            }else{
+                // val1 = newLi.find('.layui-col-md3').eq(0).text();
+                val1 = newLi.find('.stmc1').text();
+                // val2 = newLi.find('.stName').val() == null ? '' : newLi.find('.stName').val();
+                val2 = newLi.find('input[name=stName]').val() == null ? '' : newLi.find('input[name=stName]').val();
+
+                num1 = newLi.find('.objectAmount').val();
+                num2 = newLi.find('.subjectAmount').val();
+            }
+            // var str = document.getElementById("demo").innerHTML;
+            var txt1 = /^[1-9][0-9]*$/.test(num1);
+            var txt2 = /^[1-9][0-9]*$/.test(num2);
+            if(!txt1 || !txt2){
+                layer.msg('数量必须大于0！');
+                return false;
+            }
+
+            // var subjectAmount = newLi.find('.subjectAmount').val();
+            // var objectAmount = newLi.find('.objectAmount').val();
+
+            var thids = newLi.attr('dataid');
+            var strId = conId + '_' + id;  //数据源id + 新闻id 列76_1
+            var tripleFile = newLi.find('.tripleFile').val();
+            if(num1 == '' || num2 == '' || tripleFile == '' || val1 == '' || val2 == '' || val3 == '' || tripleFile == null || val1 == null || val2 == null || val3 == null){
+                layer.msg('关系、实体名、数量、文本不能为空');
+                return false;
+            }
+
+            $.ajax({
+                url:'/proofreading/savetriplet',
+                type:'post',
+                data:{id:thids,datasourceid:strId,tripleFile:tripleFile,subjectAmount:num1,objectAmount:num2,subject:val1,predicate:val3,object:val2,unit:'',predicateType:2,proofReader:zsusername},
+                success:function(msg){
+                    console.log(msg);
+                    if(msg.success){
+                        var data = JSON.parse(msg.json);
+                        if(data != null){
+                            newLi.attr('dataid',data.id);
+                        }
+                        qxGxAddFn();
+                        // var addSTr = '<div class="layui-row layui-col-space10 thwb">' +
+                        //             '    <div class="layui-col-md3">' + val1 + '</div>' +
+                        //             '    <div class="layui-col-md1">' + num1 + '</div>' +
+                        //             '    <div class="layui-col-md2">' + val3 + '</div>' +
+                        //             '    <div class="layui-col-md3">' + val2 + '</div>' +
+                        //             '    <div class="layui-col-md1">' + num2 + '</div>' +
+                        //             '    <div class="layui-col-md2">' +
+                        //             '        <input type="hidden" name="tripleFile" value="' + tripleFile + '" class="tripleFile">' +
+                        //             '        <button class="layui-btn layui-btn-xs layui-btn-normal gxEdit">编辑</button>' +
+                        //             '        <button class="layui-btn layui-btn-xs layui-btn-normal gxDel">删除</button>' +
+                        //             '    </div>' +
+                        //             '</div>';
+                        var addSTr = '<div class="thwb">' +
+                                        '<div class="layui-form-item layui-row">' +
+                                        '    <div class="layui-col-md8">' +
+                                        '        <label class="layui-form-label">实体名称</label>' +
+                                        '        <div class="layui-input-inline stmc1s" style="width: 300px;">' + val1 + '</div>' +
+                                        '    </div>' +
+                                        '    <div class="layui-col-md4">' +
+                                        '        <label class="layui-form-label" style="width:20%;">数量</label>' +
+                                        '        <div class="layui-input-inline stnum1s" style="width:80%;">' + num1 + '</div>' +
+                                        '    </div>' +
+                                        '</div>' +
+                                        '<div class="layui-form-item layui-row">' +
+                                        '    <div class="layui-col-md8">' +
+                                        '        <label class="layui-form-label">关系</label>' +
+                                        '        <div class="layui-input-inline stgx1s" style="width: 300px;">' + val3 + '</div>' +
+                                        '    </div>' +
+                                        '    <div class="layui-col-md4">' +
+                                        '        <input type="hidden" name="tripleFile" value="' + tripleFile + '" class="tripleFile">' +
+                                        '        <button class="layui-btn layui-btn-xs layui-btn-normal gxEdit">编辑</button>' +
+                                        '        <button class="layui-btn layui-btn-xs layui-btn-normal gxDel">删除</button>' +
+                                        '    </div>' +
+                                        '</div>' +
+                                        '<div class="layui-form-item layui-row">' +
+                                        '    <div class="layui-col-md8">' +
+                                        '        <label class="layui-form-label">实体名称</label>' +
+                                        '        <div class="layui-input-inline stmc2s" style="width: 300px;">' + val2 + '</div>' +
+                                        '    </div>' +
+                                        '    <div class="layui-col-md4">' +
+                                        '        <label class="layui-form-label" style="width:20%;">数量</label>' +
+                                        '        <div class="layui-input-inline stnum2s" style="width:80%;">' + num2 + '</div>' +
+                                        '    </div>' +
+                                        '</div>' +
+                                        // '<div class="layui-form-item">' +
+                                        // '    <label class="layui-form-label">文本</label>' +
+                                        // '    <div class="layui-input-inline" style="width: 500px;">' +
+                                        // '        <input type="text" name="tripleFile" value="" autocomplete="off" class="layui-input tripleFile">' +
+                                        // '    </div>' +
+                                        // '</div>' +
+                                        '</div>';
+
+                        newLi.html(addSTr);
+                        $('.lscfGXDiv').html('');
+                        gxEdit = false;
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        });
+
+        // 修改实体名称
+        $('.editTit').on('click', function(){
+            var txt = $('.stxqList h5 input').val();
+            console.log(txt)
+            if(txt == ''){
+                layer.msg('实体名不能为空！');
+                return false;
+            }
+            titObj.subject = txt;
+            $.ajax({
+                url:'/proofreading/savetriplet',
+                type:'post',
+                data:titObj,
+                success:function(msg){
+                    console.log(msg);
+                    if(msg.success){
+                        var data = JSON.parse(msg.json);
+                        layer.msg(msg.msg);
+                        location.reload();
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        });
+
+        // 修改实体类型
+        form.on('submit(edit)', function(data){
+            // console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+            $.ajax({
+                url:'/proofreading/changeEntityType',
+                type:'post',
+                data:{entityType:ctype,entityName:xzStName,newEntityType:data.field.editt},
+                success:function(msg){
+                    console.log(msg);
+                    if(msg.success){
+                        // var data = JSON.parse(msg.json);
+                        layer.msg(msg.msg);
+
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+        // 校对完成
+        form.on('submit(saveSts)', function(data){
+            // console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            var stNumber = 1
+            if(wordStatus == 3 || wordStatus == 4){
+                stNumber = 4
+            }
+            $.ajax({
+                url:'/proofreading/proofreadingcompleted',
+                type:'post',
+                data:{datasourceid:conId + '_' + id,status:stNumber,reviewer:''},
+                success:function(msg){
+                    // console.log(msg);
+                    if(msg.success){
+                        layer.msg(msg.msg,{
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                            // window.location.reload();
+                            // window.location.href = './sjyHtmlList.html?types=' + id + '_' + type + '&sourceName=' + sourceName;
+                            fhListFn()
+                        });
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        //实体列表 删除
+        $('.stList').on('click','.del',function(){
+            var names = $(this).parents('li').find('.tit').text();
+            layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                delFN(names);
+            });
+        });
+
+        //实体详情 删除
+        $('.stxqList').on('click','.stDel',function(){
+            layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                delFN(xzStName);
+            });
+        });
+
+        //返回 文章关联实体列表
+        $('.back').on('click',function(){
+            $('.gxCancel').click();
+            rightConFn('','');
+            getStTypeList();
+            gxEdit = false;
+            $('.stTab>.layui-tab-item').eq(1).removeClass('layui-show');
+            $('.stTab>.layui-tab-item').eq(0).addClass('layui-show');
+
+        });
+
+
+        //添加实体
+        $('.add').on('click',function(){
+            // console.log(123);
+            layer.open({
+                id:'stAdd',
+                type: 2,
+                title:'添加实体',
+                shade: 0,
+                area: ['600px', '500px'],
+                content: '../menuOpen/stAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                success: function(layero, index){
+                    var body = layer.getChildFrame('body', index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    var strId = conId + '_' + id;
+                    iframeWin.child(strId,wordName);
+                }
+            });
+        });
+
+        //添加实体2
+        $('.addst2').on('click',function(){
+            // console.log(123);
+            layer.open({
+                id:'stAdd2',
+                type: 2,
+                title:'添加实体',
+                shade: 0,
+                area: ['600px', '500px'],
+                content: '../menuOpen/stAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                success: function(layero, index){
+                    var body = layer.getChildFrame('body', index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    var strId = conId + '_' + id;
+                    iframeWin.child(strId,wordName,true);
+                },
+                end:function(){
+                    // console.log($('.gxList').css('display'));
+                    var disp = $('#stxqData').css('display')
+                    if(disp == 'block'){
+                        var val2 = $('.relation').val();
+                        console.log(ctype,val2);
+                        ckSTlistFN(ctype,val2);
+                    }else{
+                        window.location.reload();
+                    }
+
+                }
+            });
+        });
+
+        //编辑关系 || 删除关系
+        $('.gxList ul').on('click','.gxDel',function(){
+            var gxId = $(this).parents('li').attr('dataid');
+            console.log(gxId);
+            // stData.relations.splice($(this).parents('li').index(),1);
+            // $(this).parents('li').remove();
+            layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                delGXFN(gxId);
+                layer.close(index);
+            });
+
+        });
+
+        //删除实体
+        $('.delSt').on('click',function(){
+            // delStFn(id);
+            layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+                delStFn(conId,datasourcetype,datasourceId);
+                layer.close(index);
+            });
+        });
+    });
+
+
+    //查看关系列表 方法
+    function ckGXlistFN(category){
+
+        $.ajax({
+            url:'/proofreading/checkrelation',
+            type:'post',
+            data:{categoryId:category},
+            success:function(msg){
+                // console.log(msg);
+                if(msg.success){
+                    var data = JSON.parse(msg.json).relationlist;
+                    var relation = $('.gxAddMB').find('.relation');
+                    var relationStr = '';
+
+                    for(var i=0; i<data.length; i++){
+                        relationStr += '<option value="' + data[i] + '">' + data[i] + '</option>'
+                    }
+                    relation.html(relationStr);
+                    // ckSTlistFN(category,data[0])
+
+                    layui.use(['form'], function(){
+                        var form = layui.form;
+
+                        //根据实体类型搜索
+                        form.on('select(relation)', function (data) {   //选择移交单位 赋值给input框
+                            console.log(data);
+                            ckSTlistFN(category,data.value,'zh')
+                        });
+                        form.render('select');
+                    })
+
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+
+    //根据实体类型和关系 查找对应的实体
+    function ckSTlistFN(category,relation,zhs){
+        if(category){
+            $.ajax({
+                url:'/proofreading/queryentityByRelation',
+                type:'post',
+                data:{categoryId:category,relation:relation},
+                async:false,
+                success:function(msg){
+                    console.log(msg);
+                    if(msg.success){
+                        var data = JSON.parse(msg.json).entitynamelist;
+                        var entityLocation = JSON.parse(msg.json).entityLocation;
+                        var stName = $('.gxAddMB').find('.stName');
+                        var stNameStr = '<option value=""></option>';
+                        // console.log("“" == '"')
+
+                        var datArr = [];
+
+                        for(var i=0; i<data.length; i++){
+                            datArr.push({name: data[i], value: data[i]});
+                            // stNameStr += '<option value="' + data[i] + '">' + data[i] + '</option>'
+                            // stNameStr += '<option value="' + data[i].replaceAll("\"",'"') + '">' + data[i] + '</option>'
+                        }
+                        // stName.html(stNameStr);
+
+                        demo1 = xmSelect.render({
+                            el: '#stName',
+                            language: 'zn',
+                            name: 'stName',
+                            radio: true, //是否单选 true 为单选   false 为多选
+                            clickClose: true, //是否点击收缩
+                            filterable: true,
+                            model: {
+                                label: {
+                                    type: 'text',
+                                    //使用字符串拼接的方式
+                                    text: {
+                                        //左边拼接的字符
+                                        left: '',
+                                        //右边拼接的字符
+                                        right: '',
+                                        //中间的分隔符
+                                        separator: '，',
+                                    },
+                                }
+                            },
+                            data: datArr
+                        });
+
+                        // var st2 = $('.gxAddMB').find('.stName');
+                        var st2 = $('.gxAddMB').find('.layui-form-item').eq(2).find('.stmc1');
+
+                        if(zhs){
+                            if((entityLocation == 1 && st2.length == 0) || (entityLocation == 0 && st2.length > 0)){
+                                // console.log($('.gxAddMB'));
+                                var a = $('.gxAddMB').find('.layui-form-item').eq(0)
+                                // var a1 = $('.gxAddMB').find('.layui-col-md1').eq(0)
+                                var b = $('.gxAddMB').find('.layui-form-item').eq(2)
+                                // var b1 = $('.gxAddMB').find('.layui-col-md1').eq(1)
+
+                                var n = a.next(), p = b.prev();
+                                b.insertBefore(n);
+                                a.insertAfter(p);
+                                // var n1 = a1.next(), p1 = b1.prev();
+                                // b1.insertBefore(n1);
+                                // a1.insertAfter(p1);
+                                // dhGxWzFn()
+                            }
+                        }
+                        layui.use(['form'], function(){
+                            var form = layui.form;
+                            form.render('select');
+                        })
+
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }else{
+            demo1 = xmSelect.render({
+                el: '#stName',
+                language: 'zn',
+                name: 'stName',
+                radio: true, //是否单选 true 为单选   false 为多选
+                clickClose: true, //是否点击收缩
+                filterable: true,
+                model: {
+                    label: {
+                        type: 'text',
+                        //使用字符串拼接的方式
+                        text: {
+                            //左边拼接的字符
+                            left: '',
+                            //右边拼接的字符
+                            right: '',
+                            //中间的分隔符
+                            separator: '，',
+                        },
+                    }
+                },
+                data: []
+            });
+        }
+    }
+
+    function getTitleDataFn(obj){
+        // console.log(obj);
+        titObj = obj;
+    }
+
+    //查看实体属性
+    function ckStSxFn(category,entityName){
+
+        var inpType = {
+            'DATE':'date',
+            'STRING':'text',
+            'NUM_DOUBLE':'number',
+            'NUM_INTEGER':'number',
+            'IMAGE':'text',
+        }
+
+        $.ajax({
+            url:'/proofreading/checkAttributeAndValue',
+            type:'post',
+            data:{categoryId:category,entityName:entityName,datasourceId:conId + '_' + datasourceId},
+            success:function(msg){
+                if(msg.success){
+                    if(wordStatus == 1 || wordStatus == 2 || wordStatus == 3 || wordStatus == 4 ){
+                        $('.inpList').addClass('bj');
+                    }
+
+                    $('.inpList').html('');
+                    var data = JSON.parse(msg.json).attributeList;
+                    console.log(data);
+                    var properties = '';
+                    var pictureHtml = '';
+                    var aliasHtml = '';
+                    var describeHtml = '';
+                    getTitleDataFn(JSON.parse(msg.json).entityType);
+                    for(var i=0; i<data.length; i++) {
+                        var vz = data[i].attrValue == undefined ? '' : data[i].attrValue;
+
+                        var tripleFile = data[i].tripleFile == undefined ? '' : data[i].tripleFile;
+                        var attrId = data[i].id == undefined ? '' : data[i].id;
+
+                        var unitStr = '';
+
+                        if (data[i].unit != '' && data[i].unit != undefined && data[i].unit != null) {
+                            var unit = data[i].unit.split(',');
+                            // console.log(unit);
+                            for (var j = 0; j < unit.length; j++) {
+
+                                var s = '';
+                                if(data[i].unitValue == ''){
+                                    s = unit[j] == data[i].defaultUnit ? 'selected' : '';
+                                }else{
+                                    s = unit[j] == data[i].unitValue ? 'selected' : '';
+                                }
+
+                                unitStr += '<option ' + s + ' value="' + unit[j] + '">' + unit[j] + '</option>';
+                            }
+                            unitStr += '<option value="">请选择</option>';
+                        }
+                        // var mrdw = data[i].defaultUnit == undefined ? '' : data[i].defaultUnit;
+                        var mrdw = data[i].unitValue == undefined ? '' : data[i].unitValue;
+
+                        var tval = data[i].name == '别名' ? vz.split('@#@').join(',') : vz + mrdw;
+                        var tts = inpType[data[i].valueType] == undefined ? 'text' : inpType[data[i].valueType];
+
+                        var fwStr = '';
+                        var fwCls = data[i].allowRangeValue ? '' : 'disNone';
+                        var rangCls = '';
+                        var bjCls = '';
+
+                        if(data[i].status == '0'){
+                            bjCls = 'bjCls';
+                        }
+
+                        if (vz.indexOf('@#@') != -1 && vz != undefined && vz != 'null' && data[i].name != '别名') {
+
+                            var vzArr = vz.split('@#@');
+                            tval = vzArr[0] + ' ~ ' + vzArr[1] + mrdw;
+                            fwStr += '<div class="layui-input-inline" style="width: 50px;">' +
+                                '        <input type="number" name="range_min" value="' + vzArr[0] + '" autocomplete="off" class="layui-input attrValue">' +
+                                '      </div>' +
+                                '      <div class="layui-form-mid">-</div>' +
+                                '      <div class="layui-input-inline" style="width: 50px;">' +
+                                '        <input type="number" name="range_max" value="' + vzArr[1] + '" autocomplete="off" class="layui-input attrValue">' +
+                                '      </div>';
+                            rangCls = 1;
+                        } else {
+                            fwStr += '<div class="layui-input-inline">';
+                            //别名
+                            if (data[i].name == '别名') {
+                                fwStr += '<input type="hidden" name="attrValue" value="' + vz + '" autocomplete="off" class="layui-input attrValue ddseleVal">';
+                                fwStr += '<div class="ddsele"></div>';
+                            } else {
+                                if(data[i].valueType == 'DATE'){
+                                    fwStr += '<input type="text" name="attrValue" value="' + vz + '" id="times' + timeNum + '" autocomplete="off" class="layui-input attrValue">';
+                                    timeNum++;
+                                    timeArr.push(timeNum)
+                                }else{
+                                    fwStr += '<input type="' + tts + '" name="attrValue" value="' + vz + '" autocomplete="off" class="layui-input attrValue">';
+                                }
+
+                            }
+                            fwStr += '</div>';
+
+                        }
+
+                        if (data[i].valueType == 'PICTURE') {
+                            console.log(data[i]);
+                            var imgValStr = '';
+                            var imgDisPlayStr1 = 'style="display:block;"';
+                            var imgDisPlayStr2 = '';
+                            if (tval == '') {
+                                imgValStr += '<p>' + tval + '</p>';
+                                imgDisPlayStr2 += 'style="margin-left: 0;margin-top: 0;"';
+                                // pictureSrc = '';
+                                var pkey = '' ;
+                                pictureSrc[pkey] = '';
+                            } else {
+                                // pictureSrc = vz;
+                                pictureSrc[data[i].id] = vz;
+                                // console.log(pictureSrc)
+                                var imgArr = [];
+                                imgArr = vz.split('@#@');
+                                imgValStr += '<div class="layui-carousel test1" id="test' + data[i].id + '" lay-filter="test' + data[i].id + '"><div carousel-item="">';
+                                for (var j = 0; j < imgArr.length; j++) {
+                                    imgValStr += '<div><img src="' + imgArr[j] + '" /></div>';
+                                }
+                                imgValStr += '</div></div>';
+
+                                // imgValStr += '<img src="' + vz + '" />';
+
+                                // imgDisPlayStr1 += 'style="display:block;"';
+                                // imgDisPlayStr2 += 'style="display:none;"';
+                            }
+
+                            pictureHtml += '<div class="layui-form-item ' + bjCls + ' picType" dataid="' + attrId + '">' +
+                                '   <div class="layui-block thwb"' + imgDisPlayStr1 + ' >' +
+                                '    <label class="layui-form-label">' + data[i].name + '</label>' +
+                                '    <div class="layui-input-block">' + imgValStr + '<span class="layui-btn layui-btn-normal bcBtn pictureEdit" ' + imgDisPlayStr2 + ' >编辑图片</span></div>' +
+                                '   </div>' +
+                                '  <div class="layui-block thEdit" style="display:none;" >' +
+                                '   <div class="layui-inline">' +
+                                '    <label class="layui-form-label predicate">' + data[i].name + '</label>' +
+                                '    <div class="layui-input-inline fwBox" style="width:264px;">' +
+                                '       <button type="button" class="layui-btn psar" id="picture1">' +
+                                '           <i class="layui-icon">&#xe67c;</i>上传图片' +
+                                '       </button>' +
+                                '    </div>' +
+                                '   </div>' +
+                                '   <div class="layui-inline">' +
+                                // '    <span class="layui-btn layui-btn-normal bcBtn pictureEdit" id="pictureEdit">编辑</span>' +
+                                '    <span class="layui-btn layui-btn-normal bcBtn psar" id="picture2">保存</span>' +
+                                '    <span class="layui-btn layui-btn-normal bcBtn psarSave" style="display:none;">保存</span>' +
+                                '    <span class="layui-btn layui-btn-normal qxBtn">取消</span>' +
+                                '   </div>' +
+                                '  </div>' +
+                                '</div>';
+                            continue;
+                        }
+
+                        var qualifier = data[i].qualifier == '' ? '' : data[i].qualifier + '#';
+
+                        if (data[i].name == '别名') {
+                            aliasHtml += '<div class="layui-form-item ' + bjCls + '" dataid="' + attrId + '">' +
+                                '   <div class="layui-block thwb">' +
+                                '    <label class="layui-form-label">' + data[i].name + '</label>' +
+                                '    <div class="layui-input-block">' +
+                                '       <p>' + tval + '</p>' +
+                                '    </div>' +
+                                '   </div>' +
+                                '  <div class="layui-block thEdit">' +
+                                '   <div class="layui-inline">' +
+                                '    <label class="layui-form-label predicate">' + qualifier + data[i].name + '</label>' +
+                                '    <div class="layui-input-inline fwBox">' + fwStr + '    </div>' +
+                                '   </div>' +
+                                '   <div class="layui-inline">' +
+                                '    <div class="layui-input-inline" style="width: 100px;">' +
+                                '       <select name="unit" class="unit" lay-filter="unit">' +
+                                unitStr +
+                                '       </select> ' +
+                                '    </div>' +
+                                '   </div>' +
+                                '   <div class="layui-inline">' +
+                                '    <span class="layui-btn layui-btn-normal fwzhBtn ' + fwCls + '" range="' + rangCls + '">范围转换</span>' +
+                                '    <span class="layui-btn layui-btn-normal bcBtn">保存</span>' +
+                                '    <span class="layui-btn layui-btn-normal qxBtn">取消</span>' +
+                                '   </div>' +
+                                '   <div class="layui-block">' +
+                                '    <label class="layui-form-label">文本</label>' +
+                                '    <div class="layui-input-block">' +
+                                '        <input type="text" name="tripleFile" value="' + tripleFile + '" autocomplete="off" class="layui-input tripleFile">' +
+                                '    </div>' +
+                                '   </div>' +
+                                '  </div>' +
+                                '</div>';
+                            continue;
+                        }
+
+                        if (data[i].name == '描述') {
+                            describeHtml += '<div class="layui-form-item ' + bjCls + '" dataid="' + attrId + '">' +
+                                '   <div class="layui-block thwb">' +
+                                '    <label class="layui-form-label">' + data[i].name + '</label>' +
+                                '    <div class="layui-input-block">' +
+                                '       <p>' + tval + '</p>' +
+                                '    </div>' +
+                                '   </div>' +
+                                '  <div class="layui-block thEdit">' +
+                                '   <div class="layui-inline">' +
+                                '    <label class="layui-form-label predicate">' + qualifier + data[i].name + '</label>' +
+                                '    <div class="layui-input-inline fwBox">' + fwStr + '    </div>' +
+                                '   </div>' +
+                                // '   <div class="layui-inline">' +
+                                // '    <div class="layui-input-inline" style="width: 100px;">' +
+                                // '       <select name="unit" class="unit" lay-filter="unit">' +
+                                // unitStr +
+                                // '       </select> ' +
+                                // '    </div>' +
+                                // '   </div>' +
+                                '   <div class="layui-inline">' +
+                                // '    <span class="layui-btn layui-btn-normal fwzhBtn ' + fwCls + '" range="' + rangCls + '">范围转换</span>' +
+                                '    <span class="layui-btn layui-btn-normal bcBtn">保存</span>' +
+                                '    <span class="layui-btn layui-btn-normal qxBtn">取消</span>' +
+                                '   </div>' +
+                                // '   <div class="layui-block">' +
+                                // '    <label class="layui-form-label">文本</label>' +
+                                // '    <div class="layui-input-block">' +
+                                // '        <input type="text" name="tripleFile" value="' + tripleFile + '" autocomplete="off" class="layui-input tripleFile">' +
+                                // '    </div>' +
+                                // '   </div>' +
+                                '  </div>' +
+                                '</div>';
+                            continue;
+                        }
+
+
+                        properties += '<div class="layui-form-item ' + bjCls + '" dataid="' + attrId + '">' +
+                            '   <div class="layui-block thwb">' +
+                            '    <label class="layui-form-label">' + data[i].name + '</label>' +
+                            '    <div class="layui-input-block">' +
+                            '       <p>' + tval + '</p>' +
+                            '    </div>' +
+                            '   </div>' +
+                            '  <div class="layui-block thEdit">' +
+                            '   <div class="layui-inline">' +
+                            '    <label class="layui-form-label predicate">' + qualifier + data[i].name + '</label>' +
+                            '    <div class="layui-input-inline fwBox">' + fwStr + '    </div>' +
+                            '   </div>' +
+                            '   <div class="layui-inline">' +
+                            '    <div class="layui-input-inline" style="width: 100px;">' +
+                            '       <select name="unit" class="unit" lay-filter="unit">' +
+                            unitStr +
+                            '       </select> ' +
+                            '    </div>' +
+                            '   </div>' +
+                            '   <div class="layui-inline">' +
+                            '    <span class="layui-btn layui-btn-normal fwzhBtn ' + fwCls + '" range="' + rangCls + '">范围转换</span>' +
+                            '    <span class="layui-btn layui-btn-normal bcBtn">保存</span>' +
+                            '    <span class="layui-btn layui-btn-normal qxBtn">取消</span>' +
+                            '   </div>' +
+                            '   <div class="layui-block">' +
+                            '    <label class="layui-form-label">文本</label>' +
+                            '    <div class="layui-input-block">' +
+                            '        <input type="text" name="tripleFile" value="' + tripleFile + '" autocomplete="off" class="layui-input tripleFile">' +
+                            '    </div>' +
+                            '   </div>' +
+                            '  </div>' +
+                            '</div>';
+
+                    }
+
+
+                    var elv = $(pictureHtml + describeHtml + aliasHtml + properties);
+                    var ddsele = elv.find('.ddsele')[0];
+                    var vzz =  [];
+                    if(elv.find('.ddseleVal')[0]){
+                        vzz =  elv.find('.ddseleVal')[0].value.split('@#@');
+                    }
+                    if(ddsele){
+                        var ddSelect = xmSelect.render({
+                            el: ddsele,
+                            name: 'dds',  //下拉框表单提交时的name
+                            radio: false, //是否单选 true 为单选   false 为多选
+                            clickClose: false,
+                            filterable: true,
+                            // height: '210px',
+                            // create: function(val, arr){
+                            //     //返回一个创建成功的对象, val是搜索的数据, arr是搜索后的当前页面数据
+                            //     console.log(val, arr);
+                            //     if(arr.length === 0){
+                            //         return {
+                            //             name: val + '*',
+                            //             value: val
+                            //         }
+                            //     }
+                            // },
+                            remoteSearch: true,
+                            remoteMethod: function(val, cb, show){
+                                console.log(val, cb,show);
+                                //这里如果val为空, 则不触发搜索
+                                if(!val){
+                                    return cb([]);
+                                }
+                                //这里引入了一个第三方插件axios, 相当于$.ajax
+                                $.ajax({
+                                    url:'/proofreading/queryentityaliasname',
+                                    type:'post',
+                                    data:{entityName:val},
+                                    success:function(msg){
+                                        console.log(msg);
+                                        if(msg.success){
+                                            var res = JSON.parse(msg.json);
+                                            var arrs = [{name: val + '*', value: val}];
+                                            var pz = false;
+                                            for(var i=0; i<res.aliasName.length; i++){
+                                                if(val == res.aliasName[i]){
+                                                    pz = true;
+                                                }
+                                                arrs.push({name:res.aliasName[i],value:res.aliasName[i]});
+                                            }
+                                            if(pz){
+                                                arrs.shift();
+                                            }
+
+                                            cb(arrs)
+                                        }else{
+                                            cb([{name: val + '*', value: val}]);
+                                        }
+                                    },
+                                    error:function(){
+                                        cb([]);
+                                    }
+                                });
+                            },
+                            on: function (data) {
+                                //arr:  当前多选已选中的数据
+                                var arr = data.arr;
+                                //change, 此次选择变化的数据,数组
+                                var change = data.change;
+                                //isAdd, 此次操作是新增还是删除
+                                var isAdd = data.isAdd;
+                                // console.log(arr);
+                                //可以return一个数组, 代表想选中的数据
+                                //return []
+
+                                // console.log(arr.join(','))
+                                if(arr.length != 0){
+                                    var ars = [];
+                                    for(var i=0; i<arr.length; i++){
+                                        ars.push(arr[i].value)
+                                    }
+                                    elv.find('.ddseleVal').val(ars.join('@#@'));
+
+                                }else{
+                                    elv.find('.ddseleVal').val('')
+                                }
+
+                            },
+                            data() {
+                                if(vzz != ''){
+
+                                    var arrs = [];
+                                    for(var i=0; i<vzz.length; i++){
+                                        arrs.push({name: vzz[i], value: vzz[i]});
+                                    }
+
+                                    return arrs;
+                                }else{
+                                    return [];
+                                }
+                            }
+                            // data: function(){
+                            //     return
+                            // }
+                        })
+                        ddSelect.setValue(vzz)
+                    }
+
+                    $('.inpList').append(elv);
+                    layui.use(['form','upload','carousel','laydate'], function(){
+                        var form = layui.form;
+                        var upload = layui.upload;
+                        var carousel = layui.carousel;
+                        var laydate = layui.laydate;
+                        form.render('select');
+
+                        for(var k in pictureSrc){
+                            if(k != 'undefined'){
+                                //图片轮播
+                                carousel.render({
+                                    elem: '#test' + k
+                                    ,width: '200px'
+                                    ,height: '200px'
+                                    ,autoplay:false
+                                    // ,interval: 5000
+                                });
+                            }
+                        }
+
+                        for(var i=0; i<timeArr.length; i++){
+                            laydateTab.render({
+                                elem : '#times' + i,
+                                // type : 'ym'
+                            });
+                        }
+                        timeArr = [];
+                        timeNum = 0;
+                        
+
+
+                        //选完文件后不自动上传
+                        upload.render({
+                            elem: '#picture1'
+                            ,url: '/upload' //改成您自己的上传接口
+                            ,auto: false
+                            ,multiple: true  //多文件上传
+                            ,bindAction: '#picture2'
+                            ,done: function(res){
+                                if(res.success){
+                                    layer.msg(res.msg);
+                                    // console.log(JSON.parse(res.json).pictureName)
+                                    pictureSrc[pictureSrcId] = JSON.parse(res.json).pictureName;
+                                    $('.psarSave').click();
+
+                                }else{
+                                    layer.msg(res.msg);
+                                }
+                            }
+                        });
+
+                    })
+
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+
+    //查看实体关系
+    function ckStGxFn(entityName){
+
+        $.ajax({
+            url:'/proofreading/checkRelationAndValue',
+            type:'post',
+            async:false,
+            data:{entityName:entityName,datasourceId:conId + '_' + datasourceId},
+            success:function(msg){
+                if(msg.success){
+                    var data = JSON.parse(msg.json).entityRelationlist;
+                    console.log(data);
+                    // return false;
+                    // getTitleDataFn(JSON.parse(msg.json).entityType);
+                    var properties = '';
+                    for(var i=0; i<data.length; i++){
+                        var bjCls = '';
+                        if(data[i].status == '0'){
+                            bjCls = 'bjCls';
+                        }
+
+                        // properties += '<li class="' + bjCls + '" dataId="' + data[i].id + '">' +
+                        //             '    <div class="layui-row layui-col-space10 thwb">' +
+                        //             '        <div class="layui-col-md3">' + data[i].subject + '</div>' +
+                        //             '        <div class="layui-col-md1">' + data[i].subjectAmount + '</div>' +
+                        //             '        <div class="layui-col-md2">' + data[i].predicate + '</div>' +
+                        //             '        <div class="layui-col-md3">' + data[i].object + '</div>' +
+                        //             '        <div class="layui-col-md1">' + data[i].objectAmount + '</div>' +
+                        //             '        <div class="layui-col-md2">' +
+                        //             '            <input type="hidden" name="tripleFile" value="' + data[i].tripleFile + '" class="tripleFile">' +
+                        //             '            <button class="layui-btn layui-btn-xs layui-btn-normal gxEdit">编辑</button>' +
+                        //             '            <button class="layui-btn layui-btn-xs layui-btn-normal gxDel">删除</button>' +
+                        //             '        </div>' +
+                        //             '    </div>' +
+                        //             '</li>';
+                        properties += '<li class="' + bjCls + '" dataId="' + data[i].id + '">' +
+                                        '<div class="thwb">' +
+                                            '<div class="layui-form-item layui-row">' +
+                                            '    <div class="layui-col-md8">' +
+                                            '        <label class="layui-form-label">实体名称</label>' +
+                                            '        <div class="layui-input-inline stmc1s" style="width: 300px;">' + data[i].subject + '</div>' +
+                                            '    </div>' +
+                                            '    <div class="layui-col-md4">' +
+                                            '        <label class="layui-form-label" style="width:20%;">数量</label>' +
+                                            '        <div class="layui-input-inline stnum1s" style="width:80%;">' + data[i].subjectAmount + '</div>' +
+                                            '    </div>' +
+                                            '</div>' +
+                                            '<div class="layui-form-item layui-row">' +
+                                            '    <div class="layui-col-md8">' +
+                                            '        <label class="layui-form-label">关系</label>' +
+                                            '        <div class="layui-input-inline stgx1s" style="width: 300px;">' + data[i].predicate + '</div>' +
+                                            '    </div>' +
+                                            '    <div class="layui-col-md4">' +
+                                            '        <input type="hidden" name="tripleFile" value="' + data[i].tripleFile + '" class="tripleFile">' +
+                                            '        <button class="layui-btn layui-btn-xs layui-btn-normal gxEdit">编辑</button>' +
+                                            '        <button class="layui-btn layui-btn-xs layui-btn-normal gxDel">删除</button>' +
+                                            '    </div>' +
+                                            '</div>' +
+                                            '<div class="layui-form-item layui-row">' +
+                                            '    <div class="layui-col-md8">' +
+                                            '        <label class="layui-form-label">实体名称</label>' +
+                                            '        <div class="layui-input-inline stmc2s" style="width: 300px;">' + data[i].object + '</div>' +
+                                            '    </div>' +
+                                            '    <div class="layui-col-md4">' +
+                                            '        <label class="layui-form-label" style="width:20%;">数量</label>' +
+                                            '        <div class="layui-input-inline stnum2s" style="width:80%;">' + data[i].objectAmount + '</div>' +
+                                            '    </div>' +
+                                            '</div>' +
+                                            // '<div class="layui-form-item">' +
+                                            // '    <label class="layui-form-label">文本</label>' +
+                                            // '    <div class="layui-input-inline" style="width: 500px;">' +
+                                            // '        <input type="text" name="tripleFile" value="" autocomplete="off" class="layui-input tripleFile">' +
+                                            // '    </div>' +
+                                            // '</div>' +
+                                        '</div>' +
+                                    '</li>';
+                    }
+
+                    $('.gxList ul').html(properties);
+                    // layui.use(['form'], function(){
+                    //     var form = layui.form;
+                    //     form.render('select');
+                    // })
+
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+
+    //删除实体详情 且 删除实体下所有属性与关系
+    function delGXFN(id){
+
+        $.ajax({
+            url:'/proofreading/deleteTriplet',
+            type:'post',
+            data:{id:id},
+            success:function(msg){
+                // return false;
+                if(msg.success){
+                    layer.msg(msg.msg,{
+                        time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        window.location.reload();
+                        // fhListFn()
+                    });
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+
+    //删除实体详情 且 删除实体下所有属性与关系
+    function delFN(entityName){
+
+        $.ajax({
+            url:'/proofreading/deleteEntity',
+            type:'post',
+            data:{entityName:entityName},
+            success:function(msg){
+                // return false;
+                if(msg.success){
+                    layer.msg(msg.msg,{
+                        time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        window.location.reload();
+                        // fhListFn()
+                    });
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+    //删除html
+    function delStFn(id,type,ids){
+        $.ajax({
+            url:'/proofreading/deletedatasource',
+            type:'post',
+            data:{id:id,datasourcetype:type,ids:ids},
+            success:function(msg){
+                console.log(msg);
+                // return false;
+                if(msg.success) {
+                    layer.msg(msg.msg,{
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        // window.location.reload();
+                        // window.location.href = './sjyHtmlList.html?types=' + id + '_' + type + '&sourceName=' + sourceName;
+                        fhListFn()
+                    });
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+    function fhListFn(){
+        // window.location.href = './sjyHtmlList.html?types=' + conId + '_' + id + '&sourceName=' + sourceName + '&adminpages=' + adminpages;
+        window.history.go(-1);
+    }
+
+</script>
+</body>
+</html>

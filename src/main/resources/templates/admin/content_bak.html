@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+  <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/lib/echarts/world.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <script type="text/javascript" src="/js/map_api.min.js"></script>
+</head>
+<body class="comment">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="content">
+    <div class="header clearfix">
+        <div class="title fl">知识图谱系统后台</div>
+    </div>
+    <div class="nav">
+      <ul class="clearfix">
+        <li><a class="ons" href="javascript:;">实体详情</a></li>
+        <li><a href="javascript:;">实体图模型</a></li>
+        <li><a href="javascript:;">实体树模型</a></li>
+      </ul>
+    </div>
+    <div class="contBox" id="conts">
+        <div class="layui-row layui-col-space15">
+          <div class="layui-col-xs8">
+            <div class="cBox box_l">
+              <div class="sub">
+                <div class="sub_head">
+                  <h3><b class="logo-01">舰</b>西奥多·罗斯福号航空母舰</h3>
+                  <span class="lsbb">[历史版本]</span>
+                  <span class="xd fr">已修订</span>
+                </div>
+                <div class="sub_body">
+                  <div class="jj layui-row layui-col-space15">
+                    <div class="layui-col-md8">
+                      <div class="content">西奥多·罗斯福号航空母舰（USS Theodore Roosevelt CVN-71），或罗斯福号航空母舰，是美国尼米兹级核动力航空母舰的四号舰，起造于1981年，于1984年正式下水。西奥多·罗斯福是美国第26任总统（任期1901年—1909年），是个海军迷，任期内大力扩充海军，也在他任内完成了大白舰队计划。昵称“T.R.”的罗斯福号是美国海军第一艘以西奥多·罗斯福总统命名的航空母舰，但除了该舰外，美国海军其实曾拥有过另一艘以罗斯福为名的航空母舰──以第32任总统富兰克林·罗斯福命名的富兰克林·D·罗斯福号（USS Franklin D. Roosevelt CVB-42）。</div>
+                    </div>
+                    <div class="layui-col-md4">
+                      <img src="/images/hm_02.jpg" alt="">
+                    </div>
+                  </div>
+                  <div class="sb_rows">
+                    <h5>航迹</h5>
+                    <div class="sb_list">
+                      <div id="echart5" class="echart5"></div>
+                    </div>
+                  </div>
+                  <div class="sb_rows">
+                    <h5>概观</h5>
+                    <div class="sb_list">
+                      <ul class="clearfix">
+                        <li>
+                          <span class="lis1">舰种</span>
+                          <span class="lis2">航空母舰</span>
+                          <span class="lis3"><a href="javascript:;">维基百科</a></span>
+                        </li>
+                        <li>
+                          <span class="lis1">舰种</span>
+                          <span class="lis2">航空母舰</span>
+                          <span class="lis3"><a class="rg" href="javascript:;">人工校对</a></span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="sb_rows">
+                    <h5>技术数据</h5>
+                    <div class="sb_list">
+                      <ul class="clearfix">
+                        <li>
+                          <span class="lis1">排水量</span>
+                          <span class="lis2">104,600长吨（117,200短吨）</span>
+                          <span class="lis3"><a href="javascript:;">维基百科</a></span>
+                        </li>
+                        <li>
+                          <span class="lis1">舰种</span>
+                          <span class="lis2">航空母舰</span>
+                          <span class="lis3"><a class="rg" href="javascript:;">人工校对</a></span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-xs4">
+            <div class="cBox box_r">
+              <div class="rb_list">
+                <div class="cb_nav clearfix">
+                  <h5>关联事件</h5>
+                  <div class="fr">
+                    <span class="">展开</span>
+                  </div>
+                </div>
+                <ul class="clearfix cbl_ul">
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                  <li>
+                    <img src="/images/hm_02.jpg" alt="">
+                    <h6>福特级航空母舰</h6>
+                  </li>
+                </ul>
+              </div>
+              <div class="rb_list">
+                <div class="cb_nav clearfix">
+                  <h5>同类关联实体</h5>
+                  <div class="fr">
+                    <span class="">排序方式</span>
+                    <form class="layui-form" style="display:inline-block;">
+                      <div class="layui-input-inline" style="width:80px;">
+                        <select name="interest" lay-filter="aihao">
+                          <option value="开始时间">开始时间</option>
+                          <option value="结束时间">结束时间</option>
+                        </select>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <ul class="layui-timeline">
+                  <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text ls_box">
+                      <h3 class="layui-timeline-title"><a href="javascript:;">8月18日</a> <span class="fr"><b></b><a href="javascript:;">西奥多·罗斯福号航空母舰</a> ，<a href="javascript:;">疫情</a> ，<a href="javascript:;">越南港口</a>，<a href="javascript:;">美国</a></span></h3>
+                      <h5><a href="javascript:;">美军认定2个事实:罗斯福号航母在越南被感染，老舰长永不录用</a></h5>
+                      <div class="layui-row">
+                        <div class="layui-col-md3 ls_01">
+                          <img src="/images/hm_02.jpg" alt="">
+                        </div>
+                        <div class="layui-col-md9 ls_02">
+                          <div class="ls_02">
+                            <h6>
+                              <img src="/images/sign_02.png" alt="">
+                              <span>北晚新视觉网 2020年06月09日 08:59</span>
+                            </h6>
+                            <div class="ls_con">
+                              中新网6月9日电 据路透社报道，当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示 
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text ls_box">
+                      <h3 class="layui-timeline-title"><a href="javascript:;">8月18日</a> <span class="fr"><b></b><a href="javascript:;">西奥多·罗斯福号航空母舰</a> ，<a href="javascript:;">疫情</a> ，<a href="javascript:;">越南港口</a>，<a href="javascript:;">美国</a></span></h3>
+                      <h5><a href="javascript:;">美军认定2个事实:罗斯福号航母在越南被感染，老舰长永不录用</a></h5>
+                      <div class="layui-row">
+                        <div class="layui-col-md3 ls_01">
+                          <img src="/images/hm_02.jpg" alt="">
+                        </div>
+                        <div class="layui-col-md9 ls_02">
+                          <div class="ls_02">
+                            <h6>
+                              <img src="/images/sign_02.png" alt="">
+                              <span>北晚新视觉网 2020年06月09日 08:59</span>
+                            </h6>
+                            <div class="ls_con">
+                              中新网6月9日电 据路透社报道，当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示 
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text ls_box">
+                      <h3 class="layui-timeline-title"><a href="javascript:;">8月18日</a> <span class="fr"><b></b><a href="javascript:;">西奥多·罗斯福号航空母舰</a> ，<a href="javascript:;">疫情</a> ，<a href="javascript:;">越南港口</a>，<a href="javascript:;">美国</a></span></h3>
+                      <h5><a href="javascript:;">美军认定2个事实:罗斯福号航母在越南被感染，老舰长永不录用</a></h5>
+                      <div class="layui-row">
+                        <div class="layui-col-md3 ls_01">
+                          <img src="/images/hm_02.jpg" alt="">
+                        </div>
+                        <div class="layui-col-md9 ls_02">
+                          <div class="ls_02">
+                            <h6>
+                              <img src="/images/sign_02.png" alt="">
+                              <span>北晚新视觉网 2020年06月09日 08:59</span>
+                            </h6>
+                            <div class="ls_con">
+                              中新网6月9日电 据路透社报道，当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示 
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text ls_box">
+                      <h3 class="layui-timeline-title"><a href="javascript:;">8月18日</a> <span class="fr"><b></b><a href="javascript:;">西奥多·罗斯福号航空母舰</a> ，<a href="javascript:;">疫情</a> ，<a href="javascript:;">越南港口</a>，<a href="javascript:;">美国</a></span></h3>
+                      <h5><a href="javascript:;">美军认定2个事实:罗斯福号航母在越南被感染，老舰长永不录用</a></h5>
+                      <div class="layui-row">
+                        <div class="layui-col-md3 ls_01">
+                          <img src="/images/hm_02.jpg" alt="">
+                        </div>
+                        <div class="layui-col-md9 ls_02">
+                          <div class="ls_02">
+                            <h6>
+                              <img src="/images/sign_02.png" alt="">
+                              <span>北晚新视觉网 2020年06月09日 08:59</span>
+                            </h6>
+                            <div class="ls_con">
+                              中新网6月9日电 据路透社报道，当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示当地时间6月9日，美国三名官员表示 
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="layui-timeline-item">
+                    <!-- <i class="layui-icon layui-timeline-axis">&#xe63f;</i> -->
+                    <div class="layui-timeline-content layui-text">
+                      <div class="layui-timeline-title"></div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','layer'], function(){
+      var form = layui.form;
+      var layer = layui.layer;
+      form.render();
+      //监听提交
+      form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        return false;
+      });
+
+
+      /*
+        历史版本弹出层
+       */
+      $('.lsbb').on('click',function(){
+        layer.open({
+          id:'lsbb',
+          type: 2, 
+          title:'编辑历史',
+          area: ['1000px', '550px'],
+          content: './lsbb.html' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+        });
+      });
+      
+
+      /* 航迹 */
+      var chart5 = echarts.init(document.getElementById("echart5"));
+      var labelData = [{"name":"大庆","value":[125.03,46.58,279]}]
+      seriersData = [];
+
+      seriersData.push({
+        name: '坐标',
+        type: 'effectScatter',
+        coordinateSystem: 'geo',
+        zlevel: 2,
+        rippleEffect: {
+            brushType: 'stroke'
+        },
+        label: {
+            show: true,
+            position: 'right',
+            formatter: '{b}'
+        },
+        symbolSize: 10,
+        itemStyle: {
+            color: '#fff700',
+        },
+        data: [{"name":"坐标","value":[129.7,33.1,279]},{"name":"坐标","value":[127.7,26.3,273]},{"name":"坐标","value":[144.9,13.5,229]},{"name":"坐标","value":[122.7,47.7,194]}]
+      });
+
+      seriersData.push({
+        type:'lines',
+        color:'#ff8003',
+        opacity:'1',
+        polyline:true,
+        symbol:'circle',
+        symbolSize:8,
+        itemStyle:{
+          normal:{
+              color:'red',
+              borderColor:'red',  //拐点边框颜色
+          },
+        },
+        lineStyle:{
+          type:'solid',
+          opacity:'1',
+          color:'#fff700',
+          width: 2
+        },
+        data:[
+          {
+            name:'西奥多·罗斯福号航空母舰 ',
+            value:'2019-12-05',
+            coords:[[129.7,33.1],[127.7,26.3],[144.9,13.5],[122.7,47.7]],
+          }
+        ]
+      });
+
+      option = {
+          title: {
+          // text: '全国主要城市空气质量',
+          // subtext: 'data from PM25.in',
+          // sublink: 'http://www.pm25.in',
+          // x:'center',
+          // textStyle: {
+          //     color: '#fff'
+          // }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: function (params) {
+              return params.name + ' : ' + params.value;
+          }
+        },
+        legend: {
+            orient: 'vertical',
+            top: 'bottom',
+            left: 'right',
+            data:['pm2.5'],
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        geo: {
+            map: 'world',
+            roam:true,
+            label:{
+              normal:{
+                show:false,
+              },
+              emphasis:{
+                show:false,
+              },
+            },
+            zoom:1,
+            itemStyle: {
+                areaColor: '#323c48',
+                borderColor: '#111'
+            },
+            emphasis: {
+                itemStyle: {
+                    areaColor: '#2a333d'
+                },
+                label: {
+                    show: false
+                }
+            }
+        },
+        series:seriersData
+      };
+
+      chart5.setOption(option);
+
+      
+
+    });
+
+</script>
+</body>
+</html>

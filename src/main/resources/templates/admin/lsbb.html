@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+  <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="open">
+    <div>每页显示 8 条 , 当前显示 1-8 条记录</div>
+    <table class="layui-table">
+      <colgroup>
+        <col width="70">
+        <col width="180">
+        <col width="150">
+        <col width="">
+        <col width="140">
+        <col width="100">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>编辑时间</th>
+          <th>实体类型</th>
+          <th>实体名称</th>
+          <th>修订状态</th>
+          <th>操作</th>
+        </tr> 
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='ok'>已修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='no'>未修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='no'>未修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='no'>未修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='no'>未修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='no'>未修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='no'>未修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>2016-11-29</td>
+          <td>航母</td>
+          <td>西奥多·罗斯福号航母</td>
+          <td><span class='no'>未修订</span></td>
+          <td><a href="javascript:;">查看</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="page1"></div>
+</div>
+<script>
+    layui.use(['form','layer','laypage'], function(){
+      var form = layui.form;
+      var layer = layui.layer;
+      var laypage = layui.laypage;
+      form.render();
+      //监听提交
+      form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        return false;
+      });
+
+      laypage.render({
+        elem: 'page1'
+        ,count: 100
+        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+        ,jump: function(obj){
+          console.log(obj)
+        }
+      });
+
+      /*
+        历史版本弹出层
+       */
+      $('.lsbb').on('click',function(){
+        layer.open({
+          type: 2, 
+          content: 'http://sentsin.com' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+        });
+      });
+      
+
+    });
+
+</script>
+</body>
+</html>

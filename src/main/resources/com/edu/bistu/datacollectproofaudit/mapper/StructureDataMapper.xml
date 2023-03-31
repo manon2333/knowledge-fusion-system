@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.edu.bistu.datacollectproofaudit.mapper.StructureDataMapper" >
+  <resultMap id="BaseResultMap" type="com.edu.bistu.datacollectproofaudit.pojo.StructureData" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="data_source_name" property="dataSourceName" jdbcType="VARCHAR" />
+    <result column="dbtype" property="dbtype" jdbcType="VARCHAR" />
+    <result column="host" property="host" jdbcType="VARCHAR" />
+    <result column="port" property="port" jdbcType="INTEGER" />
+    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="tablename" property="tablename" jdbcType="VARCHAR" />
+    <result column="synchronize_state" property="synchronizeState" jdbcType="INTEGER" />
+    <result column="synchronize_cycle" property="synchronizeCycle" jdbcType="INTEGER" />
+    <result column="synchronize_position" property="synchronizePosition" jdbcType="TIMESTAMP" />
+    <result column="syn_list" property="synList" jdbcType="VARCHAR" />
+    <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+
+<!--  插入-->
+  <!--  插入结构化数据源数据-->
+  <insert id="insertStructureData" parameterType="com.edu.bistu.datacollectproofaudit.pojo.StructureData" >
+    insert into structure_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dataSourceName != null">
+        data_source_name,
+      </if>
+      <if test="dbtype != null">
+        dbtype,
+      </if>
+      <if test="host != null">
+        host,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="dbname != null">
+        dbname,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="tablename != null">
+        tablename,
+      </if>
+      <if test="synchronizeState != null">
+        synchronize_state,
+      </if>
+      <if test="synchronizeCycle != null">
+        synchronize_cycle,
+      </if>
+      <if test="synchronizePosition != null">
+        synchronize_position,
+      </if>
+      <if test="synList != null">
+        syn_list,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dataSourceName != null">
+        #{dataSourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbtype != null">
+        #{dbtype,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="dbname != null">
+        #{dbname,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="tablename != null">
+        #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="synchronizeState != null">
+        #{synchronizeState,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizeCycle != null">
+        #{synchronizeCycle,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizePosition != null">
+        #{synchronizePosition,jdbcType=TIMESTAMP},
+      </if>
+      <if test="synList != null">
+        #{synList,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+<!--  查询-->
+  <!--  查询结构化数据源数据-->
+  <select id="selectStructDatasource"  resultType="com.edu.bistu.datacollectproofaudit.pojo.StructureData" resultMap="BaseResultMap">
+    select * from structure_data where synchronize_state in (${synchronizeState}) and isdelete in (${isdelete})
+    <if test="dataSourceName != null and dataSourceName !='' ">
+      and data_source_name like '${dataSourceName}'
+    </if>
+    order by id desc limit ${lsn},${displayNumber}
+  </select>
+
+  <!--  查询结构化数据源数据数量-->
+  <select id="selectStructDatasourceNumber"  resultType="java.lang.Integer">
+    select count(*) from structure_data where synchronize_state in (${synchronizeState}) and isdelete in (${isdelete})
+    <if test="dataSourceName != null and dataSourceName !='' ">
+      and data_source_name like '${dataSourceName}'
+    </if>
+  </select>
+
+  <!--  根据Id查询结构化数据源数据-->
+  <select id="selecStructDataDatasourceById" resultType="com.edu.bistu.datacollectproofaudit.pojo.StructureData" resultMap="BaseResultMap">
+    select * from structure_data where id = '${id}'
+  </select>
+
+  <!--   查询非结构化数据源中所有数据源 -->
+  <select id="selecStructureDatasourceName"  resultType="com.edu.bistu.datacollectproofaudit.pojo.StructureData" resultMap="BaseResultMap">
+    select * from structure_data;
+  </select>
+
+<!--  更新-->
+  <!--根据id更新结构数据源表-->
+  <update id="updateStructureDataById" parameterType="com.edu.bistu.datacollectproofaudit.pojo.StructureData">
+    update structure_data
+    <set>
+      <if test="dataSourceName != null">
+        data_source_name = #{dataSourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbtype != null">
+        dbtype = #{dbtype,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        host = #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="dbname != null">
+        dbname = #{dbname,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="tablename != null">
+        tablename = #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="synchronizeState != null">
+        synchronize_state = #{synchronizeState,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizeCycle != null">
+        synchronize_cycle = #{synchronizeCycle,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizePosition != null">
+        synchronize_position = #{synchronizePosition,jdbcType=TIMESTAMP},
+      </if>
+      <if test="synList != null">
+        syn_list = #{synList,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        isdelete= #{isdelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--  根据id更新isdelete-->
+  <update id="updateIsdeleteById">
+    update structure_data set isdelete = '1' where id = '${id}'
+  </update>
+
+</mapper>

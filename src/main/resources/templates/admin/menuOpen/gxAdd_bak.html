@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name=renderer  content=webkit>
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .layui-layer-content.layui-layer-padding{color:#000;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="open">
+<!--    <div>每页显示 8 条 , 当前显示 1-8 条记录</div>-->
+    <form class="layui-form" action="javascript:;" lay-filter="gxss">
+        <div class="layui-form-item">
+            <label class="layui-form-label">实体名</label>
+            <div class="layui-input-block">
+                <input type="text" name="sname" required  lay-verify="required"autocomplete="off" disabled class="layui-input layui-disabled sname">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">关系</label>
+            <div class="layui-input-block">
+                <select name="gx" lay-verify="required" required class="gx" lay-filter="gx" lay-search>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">实体名</label>
+            <div class="layui-input-block">
+                <select name="ename" lay-verify="required" required class="ename" lay-search>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="save">立即提交</button>
+<!--                <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+  var entityType = '';
+  var entityId = '';
+  var gx = {};
+  var gxd = '';
+  var enamed = '';
+function child(entType,name,ids,type,obj){
+  entityType = entType;
+  entityId = ids;
+  $.ajax({
+    url:'/manage/getEntityByRelation',
+    type:'post',
+    data:{entityType:entType,entityName:name,uuid:ids},
+    success:function(msg){
+      if(msg.success){
+        var data = JSON.parse(msg.json);
+          console.log(data);
+          layui.use(['form','layer','laypage'], function(){
+              var form = layui.form;
+              var layer = layui.layer;
+              var laypage = layui.laypage;
+
+
+
+
+
+              // console.log();
+              $('.sname').val(name);
+              gx = data.relationEntitiesName;
+              var str1 = '';
+              for(key in data.relationEntitiesName){
+                  str1 += '<option value="' + key + '">' + key + '</option>';
+              }
+              $('.gx').html(str1);
+
+              var ename = getSt(gx,$('.gx').val());
+              if(type == 'edit'){
+                  ename = getSt(gx,obj.gx);
+              }
+
+              $('.ename').html(ename);
+
+              if(type == 'edit'){
+                  form.val("gxss", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                      "gx": obj.gx // "name": "value"
+                      ,"ename": obj.ename
+                  });
+              }
+              form.render();
+
+              form.on('select(gx)', function(data){
+                  // console.log(data.elem); //得到select原始DOM对象
+                  // console.log(data.value); //得到被选中的值
+                  // console.log(data.othis); //得到美化后的DOM对象
+
+                  var str = getSt(gx,data.value);
+                  $('.ename').html(str);
+                  form.render('select');
+              });
+
+              //监听提交
+              form.on('submit(save)', function(data){
+                  // layer.msg(JSON.stringify(data.field));
+
+                  var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                  if(type == 'add'){
+
+                      parent.GetValue(data.field,type);
+                  }else{
+
+                      parent.GetValue(data.field,type,obj.indx);
+                  }
+                  parent.layer.close(index); //再执行关闭
+
+                  return false;
+              });
+
+          });
+
+
+
+      }else{
+        layer.alert(msg.errMsg);
+      }
+    },
+    error:function(err){
+      console.log(err);
+    }
+  });
+}
+function getSt(gx,key){
+    var data = gx[key];
+    var str1 = '<option value=""></option>';
+    for(var i=0; i<data.length; i++){
+        str1 += '<option value="' + data[i] + '">' + data[i] + '</option>';
+    }
+    return str1;
+}
+</script>
+</body>
+</html>

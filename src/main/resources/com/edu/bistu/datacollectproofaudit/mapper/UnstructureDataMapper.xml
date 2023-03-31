@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.edu.bistu.datacollectproofaudit.mapper.UnstructureDataMapper" >
+  <resultMap id="BaseResultMap" type="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="data_source_name" property="dataSourceName" jdbcType="VARCHAR" />
+    <result column="dbtype" property="dbtype" jdbcType="VARCHAR" />
+    <result column="host" property="host" jdbcType="VARCHAR" />
+    <result column="port" property="port" jdbcType="INTEGER" />
+    <result column="dbname" property="dbname" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="tablename" property="tablename" jdbcType="VARCHAR" />
+    <result column="synchronize_state" property="synchronizeState" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="synchronize_cycle" property="synchronizeCycle" jdbcType="INTEGER" />
+    <result column="synchronize_position" property="synchronizePosition" jdbcType="TIMESTAMP" />
+    <result column="syn_list" property="synList" jdbcType="VARCHAR" />
+    <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="sync_table" property="syncTable" jdbcType="VARCHAR" />
+    <result column="datatype" property="datatype" jdbcType="INTEGER"/>
+  </resultMap>
+
+<!--  插入-->
+  <!--  插入非结构化数据源数据-->
+  <insert id="insertUnstructureData" parameterType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" useGeneratedKeys="true" keyProperty="id">
+    insert into unstructure_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dataSourceName != null">
+        data_source_name,
+      </if>
+      <if test="dbtype != null">
+        dbtype,
+      </if>
+      <if test="host != null">
+        host,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="dbname != null">
+        dbname,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="tablename != null">
+        tablename,
+      </if>
+      <if test="synchronizeState != null">
+        synchronize_state,
+      </if>
+      <if test="flag != null">
+        flag,
+      </if>
+      <if test="synchronizeCycle != null">
+        synchronize_cycle,
+      </if>
+      <if test="synchronizePosition != null">
+        synchronize_position,
+      </if>
+      <if test="synList != null">
+        syn_list,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+      <if test="syncTable != null">
+        sync_table,
+      </if>
+      <if test="datatype != null">
+        datatype,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dataSourceName != null">
+        #{dataSourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbtype != null">
+        #{dbtype,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="dbname != null">
+        #{dbname,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="tablename != null">
+        #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="synchronizeState != null">
+        #{synchronizeState,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizeCycle != null">
+        #{synchronizeCycle,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizePosition != null">
+        #{synchronizePosition,jdbcType=TIMESTAMP},
+      </if>
+      <if test="synList != null">
+        #{synList,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="syncTable != null">
+        #{syncTable,jdbcType=VARCHAR},
+      </if>
+      <if test="datatype != null">
+        #{datatype,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!--  同步表中插入指定字段数据-->
+  <insert id="insertNewField">
+    insert into `${synchronizetable}`(${field})
+    values(${fieldvalue})
+  </insert>
+
+<!--  查询-->
+  <!--  查询非结构化数据源数据-->
+  <select id="selectUnstructDatasource"  resultType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" resultMap="BaseResultMap">
+    select * from unstructure_data where synchronize_state in (${synchronizeState}) and isdelete in (${isdelete})
+    <if test="dataSourceName != null and dataSourceName !='' ">
+      and data_source_name like '${dataSourceName}'
+    </if>
+    order by id desc limit ${lsn},${displayNumber}
+  </select>
+  <!--  查询非结构化数据源数据数量-->
+  <select id="selectUnstructDatasourceNumber" resultType="java.lang.Integer">
+    select count(*) from unstructure_data where synchronize_state in (${synchronizeState}) and isdelete in (${isdelete})
+    <if test="dataSourceName != null and dataSourceName !='' ">
+     and data_source_name like '${dataSourceName}'
+    </if>
+  </select>
+  <!--  根据数据库名和表名查看该数据源是否存在-->
+  <select id="selectUnstructDatasourceByDbnameAndTablename"  resultType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" resultMap="BaseResultMap">
+    select * from unstructure_data where data_source_name=#{dataSourceName} and dbname=#{dbname} and tablename=#{tablename} limit 1;
+  </select>
+  <!--    查询同步表是否存在,数据源是否已被删除-->
+  <select id="isSynchronizeTableExist"  resultType="java.lang.Integer">
+    select count(*) from information_schema.TABLES where table_name = #{synchronizetable}
+  </select>
+  <!--  查询新建表中的所有字段名-->
+  <select id="selectAllFieldName"  >
+    select COLUMN_NAME from INFORMATION_SCHEMA.Columns where table_name=#{synchronizetable} and table_schema='verifydb';
+  </select>
+  <!--  根据数据库名和表名查看syn_list列-->
+  <select id="selectSynlistByDbnameAndTablename" resultType="java.lang.String" >
+    select syn_list from unstructure_data where id = '${id}' limit 1;
+  </select>
+  <!--  根据数据库名和表名查看同步位置-->
+  <select id="getSyncPosition" resultType="java.lang.String" >
+    select synchronize_position from unstructure_data where id = '${id}' limit 1;
+  </select>
+  <!--  根据Id查询非结构化数据源数据-->
+  <select id="selectUnstructDataDatasourceById" resultType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" resultMap="BaseResultMap">
+    select * from unstructure_data where id = '${id}'
+  </select>
+  <!--  根据表名查询数据源对应的同步表中所有数据-->
+  <select id="selectUnstructureDataBySynchronizetablename" resultType="java.util.Map">
+    select * from ${synchronizetable} order by id asc limit ${lsn},${displayNumber}
+  </select>
+  <!--  根据页面id查询同步表表名-->
+  <select id="getSyncTable" resultType="java.lang.String">
+    select sync_table from unstructure_data where id = '${id}' limit 1;
+  </select>
+  <!--  获得同步状态-->
+  <select id="getSyncState" resultType="java.lang.Integer">
+    select synchronize_state from unstructure_data where id = '${id}' limit 1;
+  </select>
+  <!--  获得该数据源的同步周期（分钟）-->
+  <select id="getSyncCycle" resultType="java.lang.Integer">
+    select synchronize_cycle from unstructure_data where id = '${id}' limit 1;
+  </select>
+
+
+  <!--  根据数据源名，关键字，操作人，校对状态，采集时间，校对时间，校对类型查询数据-->
+  <select id="selectSynchronizeTableData" resultType="java.util.Map">
+    select * from ${tablename} where
+      status='${status}'
+    <if test="proofreader != null and proofreader !='' ">
+     and  proofreader='${proofreader}'
+    </if>
+    <if test="keywords != null and keywords !='' ">
+      and title like '${keywords}'
+    </if>
+    <if test="acquisitionTimeStart !=null and acquisitionTimeEnd !=null">
+      and  update_time between '${acquisitionTimeStart}' and '${acquisitionTimeEnd}'
+    </if>
+    <if test="proofreadingTimeStart !=null and proofreadingTimeEnd !=null">
+      and  proof_time between '${proofreadingTimeStart}' and '${proofreadingTimeEnd}'
+    </if>
+    <if test="user != null and user !='' ">
+      and proofreader='${user}'
+    </if>
+      and isdelete='0'
+    order by id asc limit ${lsn},${displayNumber}
+  </select>
+  <!--  根据数据源名，关键字，操作人，校对状态，采集时间，校对时间，校对类型查询数据数量-->
+  <select id="selectSynchronizeTableDataNumber" resultType="java.lang.Integer">
+    select count(*) from ${tablename} where
+      status='${status}'
+    <if test="proofreader != null and proofreader !='' ">
+      and proofreader='${proofreader}'
+    </if>
+    <if test="keywords != null and keywords !='' ">
+      and title like '${keywords}'
+    </if>
+    <if test="acquisitionTimeStart !=null and acquisitionTimeEnd !=null ">
+      and update_time between '${acquisitionTimeStart}' and '${acquisitionTimeEnd}'
+    </if>
+    <if test="proofreadingTimeStart !=null and proofreadingTimeEnd !=null ">
+      and  proof_time between '${proofreadingTimeStart}' and '${proofreadingTimeEnd}'
+    </if>
+    <if test="user != null and user !=''">
+      and proofreader='${user}'
+    </if>
+      and isdelete='0'
+  </select>
+  <!--   查询非结构化数据源中所有数据源 -->
+    <select id="selectUnstructureDatasourceName"  resultType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" resultMap="BaseResultMap">
+      select * from unstructure_data;
+    </select>
+  <!-- 根据数据源名查询非结构化数据源 -->
+    <select id="selectUnstructDataDatasourceBydataSourceName" resultType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" resultMap="BaseResultMap">
+      select * from unstructure_data where data_source_name='${dataSourceName}'
+    </select>
+    <!--  根据表名查询数据源对应的同步表中未分配数据-->
+    <select id="selectUnassignedUnstructureDataBySynchronizetablename" resultType="java.util.Map">
+      select * from ${synchronizetable} where proofreader=""  or proofreader is null order by id asc limit ${lsn},${displayNumber}
+    </select>
+  <!--  根据表名查询数据源对应的同步表中未分配数据数量-->
+  <select id="selectUnassignedUnstructureDataNumber" resultType="java.lang.Integer">
+    select count(*) from ${synchronizetable} where proofreader=""  or proofreader is null
+  </select>
+  <!--  根据ID查询html列的名称（比如：content）-->
+  <select id="getSynList" resultType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData" resultMap="BaseResultMap">
+    select * from unstructure_data where id=#{id} limit 1;
+  </select>
+  <!--  根据datasourceID查询实体详情页面的内容-->
+  <select id="getEntityContent" resultType="java.util.Map">
+    select * from ${tableName} where id=#{datasourceId} limit 1;
+  </select>
+  <!--  获取数据源总数-->
+  <select id="getUndataNumber" resultType="java.lang.Integer">
+    select count(id) from unstructure_data
+  </select>
+  <!--  根据用户名和时间范围选择符合条件的已标注数据-->
+  <select id="selectViewProofByPeriod" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where proofreader = N'${username}' and status = '1'  and proof_time  between '${acquisitionTimeStart}' and '${acquisitionTimeEnd}' and reviewer is null
+  </select>
+  <!--  根据用户名未标注数据-->
+  <select id="selectViewDisProof" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where proofreader = N'${username}' and status = '0'
+  </select>
+  <!--  根据用户名已打回数据-->
+  <select id="selectViewCallback" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where proofreader = N'${username}' and status = '3'
+  </select>
+  <!--  根据用户名已返工数据-->
+  <select id="selectViewRework" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where proofreader = N'${username}' and status = '4'
+  </select>
+  <!--  根据用户名和时间范围选择符合条件的已审核数据,按照标注时间而非审核时间-->
+  <select id="selectViewReviewByPeriod" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where proofreader = N'${username}' and proof_time between '${acquisitionTimeStart}' and '${acquisitionTimeEnd}' and status = '2'
+  </select>
+
+  <!--  根据用户名查找其已标注数据数量-->
+  <select id="selectViewProofByUsername" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where proofreader = N'${username}' and status  = '1'
+  </select>
+
+  <!--  根据用户名查找其已审核数据数量-->
+  <select id="selectViewReviewByUsername" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where proofreader = N'${username}' and status  = '2'
+  </select>
+
+  <!--  根据关键字、标注人员姓名、审核人员姓名、数据采集时间、分配时间、标注时间、审核时间、是否审核/标注、数据源查找其已审核数据-->
+  <select id="selectAllUnstrutrueDataByFourTimeAndUsername" resultType="java.util.Map">
+    select * from ${tablename} where
+    status='${status}'
+    <if test="proofreader != null and proofreader !='' ">
+      and proofreader=N'${proofreader}'
+    </if>
+    <if test="reviewer != null and reviewer !='' ">
+      and reviewer='${reviewer}'
+    </if>
+    <if test="keywords != null and keywords !='' ">
+      and title like '${keywords}'
+    </if>
+    <if test="acquisitionTimeStart !=null and acquisitionTimeEnd !=null ">
+      and update_time between '${acquisitionTimeStart}' and '${acquisitionTimeEnd}'
+    </if>
+    <if test="scheduleTimeStart !=null and scheduleTimeEnd !=null ">
+      and schedule_time between '${scheduleTimeStart}' and '${scheduleTimeEnd}'
+    </if>
+    <if test="reviewTimeStart !=null and reviewTimeEnd !=null ">
+      and rev_time between '${reviewTimeStart}' and '${reviewTimeEnd}'
+    </if>
+    <if test="proofreadingTimeStart !=null and proofreadingTimeEnd !=null ">
+      and  proof_time between '${proofreadingTimeStart}' and '${proofreadingTimeEnd}'
+    </if>
+     and isdelete='0'
+     order by schedule_time desc limit ${lsn},${displayNumber}
+  </select>
+
+  <!--  根据关键字、标注人员姓名、审核人员姓名、数据采集时间、分配时间、标注时间、审核时间、是否审核/标注、数据源查找其已审核数据数量-->
+  <select id="selectAllUnstrutrueDataNumberByFourTimeAndUsername" resultType="java.lang.Integer">
+    select count(id) from ${tablename} where
+    status='${status}'
+    <if test="proofreader != null and proofreader !='' ">
+      and proofreader=N'${proofreader}'
+    </if>
+    <if test="reviewer != null and reviewer !='' ">
+      and reviewer='${reviewer}'
+    </if>
+    <if test="keywords != null and keywords !='' ">
+      and title like '${keywords}'
+    </if>
+    <if test="acquisitionTimeStart !=null and acquisitionTimeEnd !=null ">
+      and update_time between '${acquisitionTimeStart}' and '${acquisitionTimeEnd}'
+    </if>
+    <if test="scheduleTimeStart !=null and scheduleTimeEnd !=null ">
+      and schedule_time between '${scheduleTimeStart}' and '${scheduleTimeEnd}'
+    </if>
+    <if test="reviewTimeStart !=null and reviewTimeEnd !=null ">
+      and rev_time between '${reviewTimeStart}' and '${reviewTimeEnd}'
+    </if>
+    <if test="proofreadingTimeStart !=null and proofreadingTimeEnd !=null ">
+      and  proof_time between '${proofreadingTimeStart}' and '${proofreadingTimeEnd}'
+    </if>
+    and isdelete='0'
+  </select>
+  <!--  根据同步表名和数据id查询其状态-->
+  <select id="getStatusByDataId" resultType="java.lang.Integer">
+  select status from ${tablename} where id = '${id}'
+  </select>
+
+  <!--  根据id查询页面url-->
+  <select id="getUrlById" resultType="java.lang.String">
+    select url from ${tablename} where id = '${id}'
+  </select>
+
+  <!--  根据id查询数据源名称-->
+  <select id="getDataNameById" resultType="java.lang.String">
+    select data_source_name from unstructure_data where id = '${id}'
+  </select>
+
+
+  <!--  更新-->
+
+  <!--根据id更新非结构数据源表-->
+  <update id="updateUnstructureDataById" parameterType="com.edu.bistu.datacollectproofaudit.pojo.UnstructureData">
+    update unstructure_data
+    <set>
+      <if test="dataSourceName != null  and dataSourceName !='' ">
+        data_source_name = #{dataSourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbtype != null and dbtype !=''">
+        dbtype = #{dbtype,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null and host !='' ">
+        host = #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null and port !=''">
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="dbname != null and dbname !=''">
+        dbname = #{dbname,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null and username !=''">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null and password !=''">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="tablename != null and tablename !=''">
+        tablename = #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="synchronizeState != null and synchronizeState !=''">
+        synchronize_state = #{synchronizeState,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizeCycle != null and synchronizeCycle !=''">
+        synchronize_cycle = #{synchronizeCycle,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizePosition != null">
+        synchronize_position = #{synchronizePosition,jdbcType=TIMESTAMP},
+      </if>
+      <if test="synList != null and synList !=''">
+        syn_list = #{synList,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null and isdelete !=''">
+        isdelete= #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="syncTable != null and syncTable !=''">
+        sync_table= #{syncTable,jdbcType=VARCHAR},
+      </if>
+      <if test="datatype != null and datatype !=''">
+        datatype= #{datatype,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--  根据表名更新同步状态-->
+  <update id="updateStateBySchema">
+    update unstructure_data set synchronize_state = '${state}' where id = '${id}'
+  </update>
+  <!--  根据表名更新同步位置-->
+  <update id="updatePositon">
+    update unstructure_data set synchronize_position = '${synposition}' where id = '${id}'
+  </update>
+  <!--  根据库名、表名和数据源名更新同步表名-->
+  <update id="updateSynctableField">
+    update unstructure_data set sync_table = '${synchronizetablename}' where  id = '${id}'
+  </update>
+  <!--  新建同步表-->
+  <!--  新建同步表
+    id:唯一标识
+    proofreader：校对人
+    schedule_time：分配时间
+    status：0：未标注；1：已标注；2：审核通过；3：已打回；4：已返工
+    proof_time:校对完成时间
+    isdelete：是否删除（0：未删除 1：已删除）
+    reviewer：审核人
+    rev_time：审核时间
+-->
+  <update id="addNewSynchronizeTable">
+    create table `${synchronizetable}`(
+                                        id int(0) NOT NULL AUTO_INCREMENT,
+                                        proofreader varchar(255),
+                                        schedule_time timestamp default CURRENT_TIMESTAMP,
+                                        status int(0) default'0',
+                                        proof_time timestamp default CURRENT_TIMESTAMP,
+                                        isdelete int(0) default'0',
+                                        reviewer varchar(255),
+                                        rev_time timestamp default CURRENT_TIMESTAMP,
+                                        index info(status,proofreader,reviewer,schedule_time,rev_time,proof_time),
+                                        PRIMARY KEY (id))
+  </update>
+  <!--  表中添加需要同步的字段-->
+  <update id="alterNewField">
+    alter table `${synchronizetable}` add ${field} ${fieldtype}
+  </update>
+  <!--  同步表中更新指定字段数据-->
+  <update id="updateNewField" >
+    update ${synchronizetable} set ${field} = #{fieldvalue}
+  </update>
+  <!--  根据id更新isdelete-->
+  <update id="updateIsdeleteById">
+    update unstructure_data set isdelete = '1' where id = '${id}'
+  </update>
+  <!--  根据id更新同步表isdelete-->
+  <update id="updateSynchronizeTableIsdeleteById">
+    update `${tablename}` set isdelete = '1' where id = '${id}'
+  </update>
+  <!--  根据id更新同步表状态-->
+  <update id="updateSynchronizeTableStatusIsproofAndIsreworkById">
+    update `${tablename}`
+    set status ='${status}' ,proof_time ='${proofTime}' where id = '${id}'
+  </update>
+  <!--  根据id更新同步表状态-->
+  <update id="updateSynchronizeTableStatusIsreviewAndIscallbackById">
+    update `${tablename}`
+    set status ='${status}' ,reviewer = '${reviewer}',rev_time ='${reviewTime}' where id = '${id}'
+  </update>
+
+  <!--  根据id更新同步表proof_time-->
+  <update id="updateSynchronizeTableTimeById">
+    update `${tablename}` set proof_time='${proofTime}' where id = '${id}'
+  </update>
+
+  <!--  根据id更新同步表 proofreader：校对人;isschedule:是否分配;schedule_time：分配时间字段-->
+  <update id="updateUnstructureDatadistributionById">
+    update `${tablename}` set proofreader='${proofreader}',schedule_time='${scheduleTime}' where id = '${id}'
+  </update>
+
+  <!--  根据表名删除同步表changeTaskFlag-->
+  <update id="dropTableByname">
+    drop table `${tablename}`
+  </update>
+  <!--  根据id开始定时任务开始标志 -->
+  <update id="changeTaskFlagStart">
+    update unstructure_data set flag = '1' where id = '${id}'
+  </update>
+  <!--  根据id暂停定时任务开始标志 -->
+  <update id="changeTaskFlagEnd">
+    update unstructure_data set flag = '0' where id = '${id}'
+  </update>
+</mapper>

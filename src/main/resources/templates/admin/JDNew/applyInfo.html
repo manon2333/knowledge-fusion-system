@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .layui-nav{background:transparent; font-weight:400; padding:0; display: inline-block;}
+        .layui-nav .layui-nav-item a{padding:0;}
+        .layui-nav .layui-nav-more{display:none;}
+        .layui-nav-bar{display:none;}
+        .layui-nav .layui-nav-item{line-height:20px; vertical-align: baseline;}
+        .layui-nav-child{top:22px; width: 90px; line-height: 26px; left:50%; margin-left: -45px;}
+        .layui-nav-child dd{box-shadow:0 0 0 0 #FFF;}
+        #open .layui-table tbody tr td dd a{margin:0; padding: 0; font-size:12px;}
+        #open .layui-table tbody tr td dd a:hover{text-decoration:none;}
+        #open .layui-table tbody tr td>a{display:inline-block;}
+        #open .layui-table tbody tr td a{margin:0 8px;}
+        .layui-nav .layui-nav-child dd.layui-this a, .layui-nav-child dd.layui-this{background:transparent;}
+
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="open">
+    <div>
+        <div class="headBox">
+            <a href="javascript:history.back(-1)" class="layui-btn layui-border-black">返回</a>
+            <a href="javascript:void(0);" class="layui-btn layui-border-black">删除</a>
+            <div class="fr">
+                <a href="javascript:void(0);">上一条</a>
+                <a href="javascript:void(0);">下一条</a>
+            </div>
+        </div>
+        <div class="userBox">
+            <ul class="userInfo">
+                <li><b>姓名：</b><span>李强</span></li>
+                <li style="height:100%; float:right;"><b>学生证：</b><span><img src="/images/1.jpg" alt=""></span></li>
+                <li><b>身份证：</b><span>116128199902198441</span></li>
+                <li><b>银行卡：</b><span>116128199902198441</span></li>
+                <li><b>开户行：</b><span>116128199902198441</span></li>
+                <li><b>手机号：</b><span>116128199902198441</span></li>
+            </ul>
+        </div>
+        <div style="text-align:center;">
+            <button class="layui-btn layui-btn-normal">审核通过</button>
+            <button class="layui-btn layui-btn-primary">审核不通过</button>
+        </div>
+    </div>
+</div>
+<script>
+    var userId = getUrlParam('id'); //搜索类型;
+    layui.use(['form','layer','laypage', 'upload', 'element', 'laydate'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+        var laypage = layui.laypage;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+
+
+
+    });
+
+
+    function delFn(id,type){
+        $.ajax({
+            url:'/datasource/deleteDatasourceById',
+            type:'post',
+            data:{id:id,datasourcetype:type},
+            success:function(msg){
+                console.log(msg);
+                // return false;
+                if(msg.success) {
+                    layer.msg(msg.msg,{
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    },function(){
+                        // window.location.reload();
+                        window.location.href = './sjyglList.html';
+                    });
+                }else{
+                    layer.msg(msg.msg);
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name=renderer  content=webkit>
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <script src="/js/hierarchy.js"></script>
+</head>
+<body class="comment">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="content">
+    <div class="header clearfix">
+        <div class="title fl"><a href="/home/index.html">标注系统</a></div>
+        <form class="layui-form fl" action="javascript:;" id="search">
+            <div class="layui-inline inp_200">
+                <div class="layui-input-inline">
+                  <select name="entityType" lay-search class="xzs" lay-filter="sxType">
+                  </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline inp_400">
+                  <input type="text" name="keyword" placeholder="请输入实体名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                  <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">检索实体</button>
+                    <a class="shtjtz" href="/home/sltj.html">数量统计</a>
+                </div>
+            </div>
+            <br>
+            <div id="gjSx" style="display:none; margin-top:20px;">
+                <div class="layui-inline inp_200">
+                    <div class="layui-input-inline">
+                        <select name="entitySx" class="sxxz" lay-search >
+                            <option value="">不限</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline gjsxWh">
+                    <div class="layui-input-inline">
+                        <input type="number" name="sxMin" placeholder="请输入最小值" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="number" name="sxMax" placeholder="请输入最大值" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="nav">
+      <ul class="clearfix">
+        <li onclick="tz('st')"><a href="javascript:;">实体详情</a></li>
+        <li onclick="tz('t')"><a href="javascript:;" class="ons" >实体图模型</a></li>
+        <li onclick="tz('s')"><a href="javascript:;">实体树模型</a></li>
+      </ul>
+    </div>
+    <div class="contBox" id="conts">
+        <div class="layui-row layui-col-space15">
+          <div class="layui-col-xs7">
+            <div class="cBox box_l">
+              <div class="contBox stmx" id="container">
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-xs5">
+            <div class="cBox box_r">
+              <div class="sub">
+                <div class="sub_head">
+                  <h3><!--<b class="logo-01">舰</b>西奥多·罗斯福号航空母舰--></h3>
+                  <span class="lsbb">[历史版本]</span>
+                  <span class="xd fr">已修订</span>
+                </div>
+                <div class="sub_body">
+                  <div class="jj layui-row layui-col-space15">
+                    <div class="layui-col-md8">
+                      <div class="content">
+<!--                          西奥多·罗斯福号航空母舰（USS Theodore Roosevelt CVN-71），或罗斯福号航空母舰，是美国尼米兹级核动力航空母舰的四号舰，起造于1981年，于1984年正式下水。西奥多·罗斯福是美国第26任总统（任期1901年—1909年），是个海军迷，任期内大力扩充海军，也在他任内完成了大白舰队计划。昵称“T.R.”的罗斯福号是美国海军第一艘以西奥多·罗斯福总统命名的航空母舰，但除了该舰外，美国海军其实曾拥有过另一艘以罗斯福为名的航空母舰──以第32任总统富兰克林·罗斯福命名的富兰克林·D·罗斯福号（USS Franklin D. Roosevelt CVB-42）。-->
+                      </div>
+                    </div>
+                    <div class="layui-col-md4">
+                      <img src="" alt="" class="imgDt">
+                    </div>
+                  </div>
+                  <div class="sb_rows">
+                    <h5>属性</h5>
+                    <div class="sb_list">
+                      <ul class="clearfix properties">
+<!--                        <li>-->
+<!--                          <span class="lis1">舰种</span>-->
+<!--                          <span class="lis2">航空母舰</span>-->
+<!--                          <span class="lis3"><a href="javascript:;">维基百科</a></span>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                          <span class="lis1">舰种</span>-->
+<!--                          <span class="lis2">航空母舰</span>-->
+<!--                          <span class="lis3"><a class="rg" href="javascript:;">人工校对</a></span>-->
+<!--                        </li>-->
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="sb_rows">
+                    <h5>实体关系</h5>
+                    <div class="sb_list">
+                      <ul class="clearfix relations">
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+    var stObj = {};
+$(function(){
+  layui.use(['form','layer'], function(){
+    var form = layui.form;
+    var layer = layui.layer;
+      entTypeList();
+      getStSxFn(entityType);
+      form.render();
+
+    // 获取实体详情
+    getSt(entityType,id,latest,version);
+
+    var myChart = echarts.init(document.getElementById('container'));
+      var categories = [];
+      for (var i = 0; i < 2; i++) {
+          categories[i] = {
+              name: '类目' + i
+          };
+      }
+      var option = {
+          // 图的标题
+          title: {
+              // text: 'ECharts 关系图'
+          },
+          // 提示框的配置
+          tooltip: {
+              formatter: function (x) {
+                  return x.data.des;
+              }
+          },
+          // legend: [{
+          //     // selectedMode: 'single',
+          //     data: categories.map(function (a) {
+          //         return a.name;
+          //     }),
+          //     selected: {
+          //         '类目0': false,
+          //         '类目1': false,
+          //         //不想显示的都设置成false
+          //     }
+          // }],
+          series: [{
+              type: 'graph', // 类型:关系图
+              layout: 'force', //图的布局，类型为力导图
+              symbolSize: 35, // 调整节点的大小
+              roam: true, // 是否开启鼠标缩放和平移漫游。默认不开启。如果只想要开启缩放或者平移,可以设置成 'scale' 或者 'move'。设置成 true 为都开启
+              //edgeSymbol: ['circle', 'arrow'], //开启 关系 箭头
+              edgeSymbolSize: [2, 10],
+              force: {
+                  repulsion: 2000,
+                  edgeLength: [10, 50],
+                  layoutAnimaTion:false //去掉动画
+              },
+              draggable: false,
+              lineStyle: {
+                  normal: {
+                      width: 2,
+                      color: '#6498bb',
+                  }
+              },
+              edgeLabel: {
+                  normal: {
+                      show: true,
+                      formatter: function (x) {
+                          return x.data.name;
+                      }
+                  }
+              },
+              label: {
+                  normal: {
+                      show: true,
+                      textStyle: {}
+                  }
+              },
+              itemStyle: {
+                  normal: {
+                      label: {
+                          show: true,
+                          textStyle: {
+                              color: '#aaa'
+                          },
+                          position: 'bottom',//标签位置
+                          distance: 5//标签距离图形的距离
+                      },
+                      nodeStyle: {
+                          brushType: 'both',
+                          borderColor: 'rgba(255,215,0,0.4)',
+                          borderWidth: 1
+                      },
+                      linkStyle: {
+                          type: 'line'
+                      }
+                  },
+                  emphasis: {//高亮的图形样式
+                      label: {
+                          show: false
+                          // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                      },
+                      nodeStyle: {
+                          //r: 30
+                      },
+                      linkStyle: {}
+                  }
+              },              // 数据
+              data: [/*{
+                  name: 'node01',
+                  symbol: "image:///images/lgs_24.png",
+                  // symbolSize: 90,
+                  category: '类目0'
+              }, {
+                  name: 'node02',
+                  symbol: "image:///images/lgs_25.png",
+                  category: '类目1'
+              }, {
+                  name: 'node03',
+                  symbol: "image:///images/lgs_25.png",
+                  category: '类目1'
+              }, {
+                  name: 'node04',
+                  symbol: "image:///images/lgs_25.png",
+                  category: '类目1'
+              }, {
+                  name: 'node05',
+                  symbol: "image:///images/lgs_25.png",
+                  category: '类目1'
+              }*/],
+              links: [/*{
+                  source: 'node01',
+                  target: 'node02',
+                  name: 'link01'
+              }, {
+                  source: 'node01',
+                  target: 'node03',
+                  name: 'link02'
+              }, {
+                  source: 'node01',
+                  target: 'node04',
+                  name: 'link03'
+              }, {
+                  source: 'node01',
+                  target: 'node05',
+                  name: 'link04'
+              }*/],
+              // categories: categories
+          }]
+      };
+
+      var imgArr = [
+          'image:///images/lgs_10.png',
+          'image:///images/lgs_01.png',
+          'image:///images/lgs_16.png',
+          'image:///images/lgs_28.png',
+          'image:///images/lgs_06.png',
+          'image:///images/lgs_25.png',
+          'image:///images/lgs_02.png',
+          'image:///images/lgs_29.png',
+          'image:///images/lgs_30.png',
+      ];
+
+      stObj[id] = {entityType:entityType,version:version,latest:latest};
+      getTmxFn();
+      var TimeFn = null;
+      myChart.on('click', function(param) {
+          // return false;
+          if(param.data.id == undefined){
+              return false;
+          }else{
+              clearTimeout(TimeFn);
+              //执行延时
+              TimeFn = setTimeout(function(){
+                  //do function在此处写单击事件要执行的代码
+                  getSt(param.data.entityType,param.data.id,param.data.latest,param.data.version);
+              },300);
+          }
+      });
+
+      myChart.on('dblclick', function(param) {
+          // return false;
+          clearTimeout(TimeFn);
+          if(param.data.id == undefined){
+            return false;
+          }else{
+              if(id != param.data.id){
+                  if(stObj[param.data.id]){
+                      // stObj[param.data.id] = entityType;
+                      delete stObj[param.data.id];
+                  }else{
+                      stObj[param.data.id] = {entityType:param.data.entityType,version:param.data.version,latest:param.data.latest};
+                      // stObj[param.data.id] = param.data;
+                  }
+                  getTmxFn();
+              }
+          }
+      });
+
+      function getTmxFn(){
+          $.ajax({
+              url:'/query/entgraph',
+              type:'post',
+              datatype:'json',
+              data:{idTypeMap:JSON.stringify(stObj)},
+              success:function(msg){
+                  if(msg.success){
+                      var data = JSON.parse(msg.json);
+                      // console.log(data);
+                      var node = data.entityList;
+                      var link = data.relationList;
+
+                      for(var i=0; i<node.length; i++){
+                          node[i].category = node[i].entityType;
+                          var n = data.imageMap[node[i].name];
+                          node[i].symbol = imgArr[n];
+                      }
+
+                      option.series[0].data = node;
+                      option.series[0].links = link;
+                      myChart.setOption(option);
+                  }
+              },
+              error:function(err){
+                  console.log(err);
+              }
+          });
+      }
+  });
+});
+
+</script>
+</body>
+</html>

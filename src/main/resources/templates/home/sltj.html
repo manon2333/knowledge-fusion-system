@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name=renderer  content=webkit>
+    <title>标注系统</title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+</head>
+<body class="comment">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="content">
+    <div class="header clearfix">
+        <div class="title fl"><a href="/home/index.html">标注系统</a></div>
+        <form class="layui-form fl" action="javascript:;" id="search" lay-filter="formTest" >
+            <div class="layui-inline inp_200">
+                <div class="layui-input-inline">
+                    <select name="entityType" class="xzs" lay-search lay-filter="sxType">
+                        <!--                        <option value="不限定">不限</option>-->
+                        <!--                        <option value="航空母舰">航空母舰</option>-->
+                        <!--                        <option value="基地">基地</option>-->
+                        <!--                        <option value="飞机">飞机</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline inp_400">
+                    <input type="text" name="keyword" placeholder="请输入实体名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <button class="layui-btn layui-btn-normal serBtn" lay-submit lay-filter="formDemo">检索实体</button>
+                    <a class="shtjtz" href="/home/sltj.html">数量统计</a>
+                </div>
+            </div>
+            <br>
+            <div id="gjSx" style="display:none; margin-top:20px;">
+                <div class="layui-inline inp_200">
+                    <div class="layui-input-inline">
+                        <select name="entitySx" class="sxxz" lay-search >
+                            <option value="">不限</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline gjsxWh">
+                    <div class="layui-input-inline">
+                        <input type="number" name="sxMin" placeholder="请输入最小值" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="number" name="sxMax" placeholder="请输入最大值" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="contBox" id="container">
+        <div class="layui-row" style="padding-left: 80px;">
+            <form class="layui-form fl" action="javascript:;" lay-filter="shtjInfo" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">国家或地区</label>
+                    <div class="layui-input-block">
+                        <select name="city" class="city" lay-search lay-filter="city">
+<!--                            <option value=""></option>-->
+<!--                            <option value="0">北京</option>-->
+<!--                            <option value="1">上海</option>-->
+<!--                            <option value="2">广州</option>-->
+<!--                            <option value="3">深圳</option>-->
+<!--                            <option value="4">杭州</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">子类型筛选</label>
+                    <div class="layui-input-block childType">
+                        <a href="javascript:;" class="layui-btn layui-btn-normal">军事基地</a>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal">导弹</a>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal">战机</a>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal">舰艇</a>
+                        <a href="javascript:;" class="layui-btn layui-btn-normal">雷达</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-row">
+            <div id="echartTj" style="width:100%; height:800px; margin:0 auto;"></div>
+        </div>
+    </div>
+</div>
+<script>
+    var ctName = '';
+    var country = '';
+    var entitySubType = '';
+    layui.use('form', function(){
+        var form = layui.form;
+        entTypeList();
+        form.render();
+
+        //搜索框下 信息
+        $.ajax({
+            url:'/query/countries',
+            type:'post',
+            //data:{type:entityType,kw:keyword,results:results,page:page},
+            success:function(msg){
+                if(msg.success){
+                    $('.city').html('');
+                    var data = JSON.parse(msg.json);
+                    var str = '<option value="">不限</option>';
+                    for(var i=0; i<data.country.length; i++){
+                        str += '<option value="' + data.country[i] + '">' + data.country[i] + '</option>';
+                    }
+                    $('.city').append(str);
+                    // form.render('select');
+                    layui.use('form', function() {
+                        var form = layui.form;
+                        form.render('select');
+                    });
+                }
+
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+
+        var myChart = echarts.init(document.getElementById('echartTj'));
+
+        var option = {
+            title: {
+                text: '',
+                left: 'center',
+                top: 20,
+                textStyle: {
+                    color: '#ccc'
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            // legend: {
+            //     data: ['2011年', '2012年']
+            // },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                boundaryGap: [0, 0.01],
+                axisLine: {
+                    lineStyle: {
+                        type: 'solid',
+                        color: '#fff',//左边线的颜色
+                        width:'2'//坐标线的宽度
+                    }
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff',//坐标值得具体的颜色
+                    }
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: [], //['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)'],
+                axisLine: {
+                    lineStyle: {
+                        type: 'solid',
+                        color: '#fff',//左边线的颜色
+                        width:'2'//坐标线的宽度
+                    }
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff',//坐标值得具体的颜色
+                    }
+                }
+            },
+            series: [
+                {
+                    name: '中国',
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            //好，这里就是重头戏了，定义一个list，然后根据所以取得不同的值，这样就实现了，
+                            color: function(params) {
+                                // build a color map as your need.
+                                var colorList = [
+                                    '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+                                    '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+                                    '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                                ];
+                                return getRandomColor2();
+
+                            },
+                            //以下为是否显示，显示位置和显示格式的设置了
+                            label: {
+                                show: true,
+                                position: 'right',
+                                formatter: '{c}',
+                                // formatter: '{b}\n{c}',
+                                // color:'#fff'
+                            }
+                        }
+
+                    },
+                    data: [] //[19325, 23438, 31000, 121594, 134141, 681807]
+                }
+            ]
+        };
+
+        myChart.setOption(option);
+        $('.childType .layui-btn').on('click',function(){
+
+            $('.childType .layui-btn').removeClass('clickOn');
+            if(entitySubType != $(this).text()){
+                $(this).addClass('clickOn');
+                entitySubType = $(this).text();
+            }else{
+                entitySubType = '';
+            }
+            getTmxFn(country,entitySubType);
+
+        });
+        form.on('select(city)', function(data){
+            // console.log(data.elem); //得到select原始DOM对象
+            // console.log(data.value); //得到被选中的值
+            // console.log(data.othis); //得到美化后的DOM对象
+            country = data.value;
+            // entitySubType = '';
+            getTmxFn(country,entitySubType);
+        });
+        getTmxFn(country,entitySubType);
+        function getTmxFn(country,entitySubType){
+            $.ajax({
+                url:'/query/entityStatistics',
+                type:'post',
+                datatype:'json',
+                data:{country:country,entitySubType:entitySubType},
+                success:function(msg){
+                    if(msg.success){
+                        var data = JSON.parse(msg.json);
+                        // console.log(data);
+                        // return false;
+                        option.title.text = data.title;
+                        option.series[0].name = country;
+                        option.series[0].data = data.series;
+                        option.yAxis.data = data.yAxis;
+                        myChart.setOption(option);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+
+
+    });
+</script>
+</body>
+</html>

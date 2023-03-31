@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .xyb{margin:0;margin-top:20px;}
+        .cswb{cursor:pointer; color:#1E9FFF!important;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="iframe dcSj sjkdr" id="open">
+    <h4 class="dcTit">关系型数据库导入</h4>
+    <ul class="buz clearfix">
+        <li class="on">
+            <span>1</span>
+            <p>连接数据库</p>
+        </li>
+        <li>
+            <span>2</span>
+            <p>同步设置</p>
+        </li>
+        <li>
+            <span>3</span>
+            <p>导入完成</p>
+        </li>
+    </ul>
+    <form class="layui-form" action="javascript:;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">数据源名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="dataSourceName" required  lay-verify="required" placeholder="请输入数据源名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">同步周期</label>
+            <div class="layui-input-block">
+                <input type="text" name="synchronizeCycle" required  lay-verify="required" placeholder="请输同步周期(分钟)" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">host</label>
+            <div class="layui-input-block">
+                <input type="text" name="host" required  lay-verify="required" placeholder="请输入host" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">port</label>
+            <div class="layui-input-block">
+                <input type="text" name="port" required  lay-verify="required" placeholder="请输入port" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">user</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" required  lay-verify="required" placeholder="请输入user" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">password</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" required  lay-verify="required" placeholder="请输入password" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数据库类型</label>
+            <div class="layui-input-block">
+                <select name="dbtype" lay-verify="">
+                    <option value="mysql">mysql</option>
+                    <option value="oracle">oracle</option>
+                    <option value="PostgreSQL">PostgreSQL</option>
+                    <option value="DB2">DB2</option>
+                    <option value="Sybase">Sybase</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数据库名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="dbname" required  lay-verify="required" placeholder="请输入数据库名称" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux cswb" lay-submit lay-filter="csLink">测试连接</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数据库表</label>
+            <div class="layui-input-block">
+                <select name="tablename" lay-verify="">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block xyb">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="sub">下一步</button>
+                <a href="./sjyglList.html" class="layui-btn layui-btn-primary">取消</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer','laydate'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        /**
+         * 测试数据库连接
+         * @param host host
+         * @param port port
+         * @param username 用户名
+         * @param password 密码
+         * @param dbtype 数据库类型
+         * @param dbname 数据库名
+         * @return QueryResponse
+         *
+         *  @RequestMapping(value = "/datasource/testconnection",produces = "application/json;charset=UTF-8",method = RequestMethod.POST)
+         */
+
+
+        //测试数据库连接
+        form.on('submit(csLink)', function(data){
+            // layer.msg(JSON.stringify(data.field));
+            // console.log(data);
+            // console.log(starttime,endtime);
+            // return  false;
+            $.ajax({
+                url:'/datasource/testconnection',
+                type:'post',
+                data:{host:data.field.host,port:data.field.port,username:data.field.username,password:encodeURI(data.field.password),dbtype:data.field.dbtype,dbname:data.field.dbname},
+                // beforeSend:function(){
+                //     parent.layer.load(1, {shade:0.3});
+                // },
+                success:function(msg){
+                    console.log(msg);
+                    // parent.layer.closeAll();
+                    if(msg.success){
+
+                        var data = JSON.parse(msg.json).tableList;
+                        console.log(data);
+                        // parent.layer.msg(msg.msg);
+                        var str = '<option value=""></option>';
+                        for(var i=0; i<data.length; i++){
+                            str += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                        }
+                        $('select[name=tablename]').html(str);
+                        form.render('select');
+                        console.log(data);
+                        layer.msg(msg.msg);
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+
+                },
+                error:function(err){
+                    console.log(err);
+                    parent.layer.closeAll();
+                }
+            });
+
+            return false;
+        });
+
+        //监听提交
+        form.on('submit(sub)', function(data){
+            // layer.msg(JSON.stringify(data.field));
+            console.log(data);
+            // console.log(starttime,endtime);
+            data.field.password = encodeURI(data.field.password)
+            // return  false;
+            $.ajax({
+                url:'/datasource/add',
+                type:'post',
+                data:data.field,
+                // beforeSend:function(){
+                //     parent.layer.load(1, {shade:0.3});
+                // },
+                success:function(msg){
+                    console.log(msg);
+                    // parent.layer.closeAll();
+                    if(msg.success){
+                        $.cookie('sjklink', msg.json);
+                        // layer.msg(msg.msg);
+                        layer.msg(msg.msg,{
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                            // window.location.reload();
+                            window.location.href = './sjkdr2.html';
+                        });
+
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+
+                },
+                error:function(err){
+                    console.log(err);
+                    parent.layer.closeAll();
+                }
+            });
+
+            return false;
+        });
+
+    });
+
+</script>
+</body>
+</html>

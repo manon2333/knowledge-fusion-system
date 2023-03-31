@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .layui-inline {margin-bottom: 14px;}
+        .sub_list {padding-left: 80px;}
+        .sub_list li .nums{position: absolute; top: 3px; left: -66px;}
+    </style>
+</head>
+<body class="ifra">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="iframe sjjd" id="iframe">
+    <div class="header clearfix">
+        <form class="layui-form" action="javascript:;" id="search" lay-filter="formTest">
+          <div class="layui-inline">
+              <label class="layui-form-label">数据源</label>
+              <div class="layui-input-inline inp_150">
+                  <select name="dataSourceName" lay-filter="dataSourceName">
+
+                  </select>
+              </div>
+          </div>
+          <div class="layui-inline inp_200">
+              <label class="layui-form-label">开始序号</label>
+              <div class="layui-input-inline" style="width: 200px;">
+                  <input type="text" name="start" placeholder="请输入开始序号" autocomplete="off" class="layui-input start">
+              </div>
+          </div>
+          <div class="layui-inline inp_200">
+              <label class="layui-form-label">结束序号</label>
+              <div class="layui-input-inline" style="width: 200px;">
+                  <input type="text" name="end" placeholder="请输入结束序号" autocomplete="off" class="layui-input end">
+              </div>
+          </div>
+          <div class="layui-inline">
+              <label class="layui-form-label">标注人</label>
+              <div class="layui-input-inline inp_150">
+                  <select name="czr" lay-search lay-filter="czr">
+                  </select>
+              </div>
+          </div>
+          <div class="layui-inline">
+              <button type="button" class="layui-btn layui-btn-normal fpsj">分配数据</button>
+          </div>
+          <div class="ctop">
+            <input type="checkbox" name="" title="全选" lay-skin="primary" lay-filter="quanx">
+            <button type="button" class="layui-btn layui-btn-normal plfp">批量分配</button>
+<!--            <button type="button" class="layui-btn layui-btn-normal plDel">批量删除</button>-->
+          </div>
+        </form>
+    </div>
+    <div class="contBox">
+      <div class="sub layui-form">
+        <ul class="sub_list">
+<!--          <li>-->
+<!--            <input class="list_che" type="checkbox" lay-skin="primary" value="1">-->
+<!--            <h5><b class="blog g-off">未标注</b><a href="./sjyHtmlContent.html">尼米兹级核动力航空母舰</a></h5>-->
+<!--            <div class="sl_con">-->
+<!--              <div class="slc">-->
+<!--                尼米兹级核动力航空母舰（英语：Nimitz Class Aircraft Carrier）是美国海军所使用的多用途超级航空母舰同时也是美国海军新世代的航空母舰，为美国海军第二代核动力航空母舰。-->
+<!--              </div>-->
+<!--              <div class="bz">-->
+<!--                <a href="javascript:;">环球网</a>-->
+<!--                <span>2020-7-17  12:05:18</span>-->
+<!--                <span>张三</span>-->
+<!--                <span>2020-7-18  12:05:18</span>-->
+<!--                <b class="del"></b>-->
+<!--                <div class="fr">-->
+<!--                    <b class="tags"></b>-->
+<!--                    <span>实体</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <input class="list_che" type="checkbox" lay-skin="primary" value="2">-->
+<!--            <h5><b class="blog g-on">已标注</b><a href="./sjyHtmlContent.html">尼米兹级核动力航空母舰</a></h5>-->
+<!--            <div class="sl_con">-->
+<!--              <div class="slc">-->
+<!--                尼米兹级核动力航空母舰（英语：Nimitz Class Aircraft Carrier）是美国海军所使用的多用途超级航空母舰同时也是美国海军新世代的航空母舰 ，为美国海军第二代核动力航空母舰。-->
+<!--              </div>-->
+<!--              <div class="bz">-->
+<!--                <a href="javascript:;">环球网</a>-->
+<!--                <span>2020-7-17  12:05:18</span>-->
+<!--                <span>张三</span>-->
+<!--                <span>2020-7-18  12:05:18</span>-->
+<!--                <b class="del"></b>-->
+<!--                  <div class="fr">-->
+<!--                      <b class="tags"></b>-->
+<!--                      <span>实体</span>-->
+<!--                  </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </li>-->
+          
+        </ul>
+        <div id="demo1" style="text-align:center; margin-top:20px;"></div>
+      </div>
+    </div>
+</div>
+<script>
+  var timer = '';
+  var page = adminpages;
+  var limit = 10;
+  var sourceName = getUrlParam('sourceName');
+  var jkObj = {
+      id:'', //数据源id
+      // dataSourceName: '', //数据源名
+      start: '', //开始序号
+      end: '', //结束序号
+      proofreader: '', //标注人 操作人\
+      // pageNumber: '', //第几页
+      // displayNumber: '' //展示页数
+  }
+    layui.use(['form','layer','laypage','laydate'], function(){
+      var form = layui.form;
+      var layer = layui.layer;
+      var laypage = layui.laypage;
+      var laydate = layui.laydate;
+
+      //数据源名  选择
+      form.on('select(dataSourceName)', function(data){
+          // console.log(data.elem); //得到select原始DOM对象
+          // console.log(data.value); //得到被选中的值
+          // console.log(data.othis); //得到美化后的DOM对象
+          sourceName = $(data.othis).find('.layui-input').val();
+          jkObj.id = data.value;
+          jkObj.datasourcetype = 1;
+          page = 1;
+          getList(jkObj,page,limit);
+      });
+
+      //数据源列表渲染
+      $.ajax({
+          url:'/datadistribution/selectunstructuredatasource',
+          type:'post',
+          data:{},
+          success:function(msg){
+              if(msg.success) {
+                  var data = JSON.parse(msg.json).datasourcenamelist;
+                  // console.log(data);
+                  var str = '';
+                  for(var i=0; i<data.length; i++){
+                      str += '<option value="' + data[i].id + '">' + data[i].datasourceName + '</option>';
+                  }
+                  $('select[name=dataSourceName]').html(str);
+
+                  jkObj.id = data[0].id;
+                  form.val("formTest", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                      "dataSourceName": jkObj.id // "name": "value"
+                  });
+
+                  form.render('select');
+                  jkObj.id = data[0].id;
+                  getList(jkObj,page,limit);
+              }
+          },
+          error:function(err){
+              console.log(err);
+          }
+      });
+
+        //操作人 选择
+        form.on('select(czr)', function(data){
+            // console.log(data.elem); //得到select原始DOM对象
+            // console.log(data.value); //得到被选中的值
+            // console.log(data.othis); //得到美化后的DOM对象
+
+            jkObj.proofreader = data.value;
+            // page = 1;
+            // getList(jkObj,page,limit);
+        });
+
+        //操作人 标注人 列表渲染
+        $.ajax({
+            url:'/datadistribution/selectproofreader',
+            type:'post',
+            data:{},
+            success:function(msg){
+                if(msg.success) {
+                    var data = JSON.parse(msg.json).usernamelist;
+                    // console.log(data);
+                    var str = '<option value=""></option>';
+                    for(var i=0; i<data.length; i++){
+                        str += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                    }
+                    $('select[name=czr]').html(str);
+
+                    form.render('select');
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+
+      /* 全选 */
+      form.on('checkbox(quanx)', function(data){
+        // console.log(data.elem); //得到checkbox原始DOM对象
+        // console.log(data.elem.checked); //是否被选中，true或者false
+        // console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+        // console.log(data.othis); //得到美化后的DOM对象
+        // $('.list_che').attr('checked',data.elem.checked);
+        // form.render('checkbox');
+
+        var child = $('.list_che');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            form.render('checkbox');
+
+      });
+
+        // 批量数据
+        $('.fpsj').on('click',function(){
+
+            var start = $('input[name=start]').val();
+            var end = $('input[name=end]').val();
+
+            if(jkObj.proofreader == ''){
+                layer.msg('请选择标注人');
+                return false;
+            }
+            if(start == '' || end == ''){
+                layer.msg('请填写开始序号和结束序号');
+                return false;
+            }
+
+            $.ajax({
+                url:'/datadistribution/updateSerialNmberDistribution',
+                type:'post',
+                data:{id:jkObj.id,proofreader:jkObj.proofreader,start:start,end:end},
+                beforeSend : function(obj){
+                    load = layer.load(1,{shade: [0.5, '#000']});
+                },
+                success:function(msg){
+                    layer.closeAll();
+                    if(msg.success) {
+                        // layer.msg(msg.msg);
+                        // page = 1;
+                        // getList(jkObj,page,limit);
+                        layer.msg(msg.msg,{time:2000},function(){
+                            page = 1;
+                            getList(jkObj,page,limit);
+                        });
+                    }
+                },
+                error:function(err){
+                    layer.closeAll();
+                    console.log(err);
+                }
+            });
+        });
+
+      // 批量分配
+      $('.plfp').on('click',function(){
+
+          if(jkObj.proofreader == ''){
+              layer.msg('请选择标注人');
+              return false;
+          }
+
+          var arr = [];
+          for(var i=0; i<$('.list_che').length; i++){
+              if($('.list_che')[i].checked){
+                  arr.push($('.list_che').eq(i).val());
+              }
+          }
+          // console.log(arr);
+          arr = arr.join(',');
+          $.ajax({
+              url:'/datadistribution/updatedistribution',
+              type:'post',
+              data:{id:jkObj.id,proofreader:jkObj.proofreader,ids:arr},
+              beforeSend : function(obj){
+                  load = layer.load(1,{shade: [0.5, '#000']});
+              },
+              success:function(msg){
+                  layer.closeAll();
+                  if(msg.success) {
+                      layer.msg(msg.msg,{time:2000},function(){
+                          page = 1;
+                          getList(jkObj,page,limit);
+                      });
+                  }
+              },
+              error:function(err){
+                  layer.closeAll();
+                  console.log(err);
+              }
+          });
+      });
+
+      //单个删除
+      $('.sub_list').on('click','.del',function(){
+          console.log($(this));
+          var ids = $(this).attr('data-id');
+          layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+              delFn(jkObj.id,jkObj.datasourcetype,ids);
+              layer.close(index);
+          });
+      });
+
+      //批量删除
+      $('.plDel').on('click',function(){
+        var arr = [];
+        for(var i=0; i<$('.list_che').length; i++){
+          if($('.list_che')[i].checked){
+            arr.push($('.list_che').eq(i).val());
+          }
+        }
+        // console.log(arr);
+          arr = arr.join(',')
+          layer.confirm('确定删除么?', {icon: 3, title:'提示'}, function(index){
+              delFn(jkObj.id,jkObj.datasourcetype,arr);
+              layer.close(index);
+          });
+      });
+
+
+
+      form.render();
+
+    });
+
+
+  function getList(obj,page,pageSize){
+
+      $.ajax({
+          url:'/datadistribution/selectdata',
+          type:'post',
+          data:{
+              id:obj.id,
+              // start:obj.start,
+              // end:obj.end,
+              pageNumber:page,
+              displayNumber:pageSize
+          },
+          beforeSend : function(obj){
+              load = layer.load(1,{shade: [0.5, '#000']});
+          },
+          success:function(msg){
+              layer.closeAll();
+              $('.sub_list').html('');
+              var totals = 0;
+              if(msg.success) {
+                  var res = JSON.parse(msg.json);
+                  if(Math.ceil(res.total/pageSize) < page && Math.ceil(res.total/pageSize) != 0){
+                      page = Math.ceil(res.total/pageSize) == 0 ? 1 : Math.ceil(res.total/pageSize);
+                      getList(obj,page,limit);
+                      return false;
+                  }
+                  var data = res.list;
+                  console.log(data);
+                  var str = '';
+                  for(var i=0; i<data.length; i++){
+
+                      var updateTime = getTime(data[i].updateTime);
+                      // var proofTime = getTime(data[i].proofTime);
+                      var isproof = '';
+                      if(true){
+                          isproof = '<b class="blog g-off">未标注</b>';
+                      }else{
+                          isproof = '<b class="blog g-on">已标注</b>';
+                      }
+
+                      str += '<li>' +
+                              '<span class="nums">' + eval(i+1+(10*(page-1))) + '</span>' +
+                          '            <input class="list_che" type="checkbox" lay-skin="primary" value="' + data[i].id +  '">' +
+                          '            <h5>' + isproof + '<a href="./examineContent.html?sjyId=' + obj.id + '&id=' + data[i].id + '&datasourcetype=' + obj.datasourcetype + '&sourceName=' + data[i].dataSource + '&adminpages=' + page + '">' + data[i].title + '</a></h5>' +
+                          '            <div class="sl_con">' +
+                          // '              <div class="slc">暂无摘要</div>' +
+                          '              <div class="bz">' +
+                          // '                <a href="javascript:;">' + sourceName + '</a>' +
+                          '                <span>' + updateTime + '</span>' +
+                          // '                <span>' + data[i].proofreader + '</span>' +
+                          // '                <span>' + proofTime + '</span>' +
+                          // '                <b class="del" data-id="' + data[i].id + '"></b>' +
+                          '                <div class="fr">' +
+                          '                    <b class="tags"></b>' +
+                          '                    <span>实体</span>' +
+                          '                </div>' +
+                          '              </div>' +
+                          '            </div>' +
+                          '          </li>';
+
+                  }
+                  totals = res.total;
+
+                  $('.sub_list').html(str);
+                  layui.use(['form'], function(){
+                      var form = layui.form;
+
+                      $('.ctop input')[0].checked = false;
+                      form.render();
+                  })
+
+                  console.log(page);
+
+              }else{
+                  // $('.sub_list').html('');
+                  layer.msg(msg.msg);
+              }
+
+              pageFn(totals)
+          },
+          error:function(err){
+              layer.closeAll();
+              console.log(err);
+          }
+      });
+  }
+
+  function pageFn(total){
+      layui.use(['form','laypage'], function() {
+          var form = layui.form;
+          var laypage = layui.laypage;
+
+          laypage.render({
+              elem: 'demo1'
+              ,count: total
+              ,curr:page
+              ,limit:limit
+              // ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+              ,layout: ['prev', 'page', 'next', 'limit', 'skip']
+              ,jump: function(obj,first){
+                  // console.log(obj);
+                  if(!first){
+                      //do something
+                      page = obj.curr;
+                      limit = obj.limit;
+                      // getList(kVale,page,limit);
+                      getList(jkObj,page,limit);
+                  }
+
+              }
+          });
+
+          form.render('checkbox');
+
+      });
+  }
+
+  //删除接口
+  function delFn(id,type,ids){
+      $.ajax({
+          url:'/proofreading/deletedatasource',
+          type:'post',
+          data:{id:id,datasourcetype:type,ids:ids},
+          success:function(msg){
+              console.log(msg);
+              if(msg.success) {
+                  layer.msg(msg.msg,{
+                      time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                  },function(){
+                      // window.location.reload();
+                      window.location.href = './sjyHtmlList.html?types=' + id + '_' + type + '&sourceName=' + sourceName;
+                  });
+              }else{
+                  layer.msg(msg.msg);
+              }
+          },
+          error:function(err){
+              console.log(err);
+          }
+      });
+  }
+
+</script>
+</body>
+</html>

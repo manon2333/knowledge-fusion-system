@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .layui-nav{background:transparent; font-weight:400; padding:0; display: inline-block;}
+        .layui-nav .layui-nav-item a{padding:0;}
+        .layui-nav .layui-nav-more{display:none;}
+        .layui-nav-bar{display:none;}
+        .layui-nav .layui-nav-item{line-height:20px; vertical-align: baseline;}
+        .layui-nav-child{top:22px; width: 90px; line-height: 26px; left:50%; margin-left: -45px;}
+        .layui-nav-child dd{box-shadow:0 0 0 0 #FFF;}
+        #open .layui-table tbody tr td dd a{margin:0; padding: 0; font-size:12px;}
+        #open .layui-table tbody tr td dd a:hover{text-decoration:none;}
+        #open .layui-table tbody tr td>a{display:inline-block;}
+        #open .layui-table tbody tr td a{margin:0 8px;}
+        .layui-nav .layui-nav-child dd.layui-this a, .layui-nav-child dd.layui-this{background:transparent;}
+        #open{color:#fff;}
+        .tabBox .layui-form-item{width:460px;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="" id="open">
+    <div>
+        <div class="headBox">
+            <a href="javascript:history.back(-1)" class="layui-btn layui-border-black">返回</a>
+<!--            <a href="javascript:void(0);" class="layui-btn layui-border-black">删除</a>-->
+<!--            <div class="fr">-->
+<!--                <a href="javascript:void(0);">上一条</a>-->
+<!--                <a href="javascript:void(0);">下一条</a>-->
+<!--            </div>-->
+        </div>
+        <div class="userBox">
+            <ul class="userInfo">
+                <li><b>姓名：</b><span class="name">李强</span></li>
+                <li style="height:100%; float:right;"><b>学生证：</b><span class="student_card"><img src="/images/1.jpg" alt=""></span></li>
+                <li><b>身份证：</b><span class="id_number">116128199902198441</span></li>
+                <li><b>银行卡：</b><span class="yhk">116128199902198441</span></li>
+                <li><b>开户行：</b><span class="kfc">116128199902198441</span></li>
+                <li><b>手机号：</b><span class="phone">116128199902198441</span></li>
+            </ul>
+        </div>
+        <div class="tabBox">
+            <div class="layui-form-item">
+                <label class="layui-form-label">时间筛选</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="test1" placeholder="请选择日期" autocomplete="off">
+                </div>
+            </div>
+            <table class="layui-table">
+                <colgroup>
+                    <col width="300">
+                    <col width="300">
+                </colgroup>
+                <thead>
+                <tr>
+                    <!--                <th><input type="checkbox" name="" lay-skin="primary" lay-filter="quanx"></th>-->
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>未标注数据</th>
+                    <th>已标注数据</th>
+                    <th>已通过数据</th>
+                    <th>已打回数据</th>
+                    <th>已返工数据</th>
+                    <th>新上传数据</th>
+                    <th>总劳务费</th>
+                </tr>
+                </thead>
+                <tbody class="ctList1">
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form class="layui-form" action="javascript:;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">时间筛选</label>
+                    <div class="layui-input-block">
+                        <select name="" lay-verify="required"  lay-filter="test2">
+                            <option value="0">近三天</option>
+                            <option value="1">近一周</option>
+                            <option value="2">近一月</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">时间筛选</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <input type="text" class="layui-input" id="test2">-->
+<!--                </div>-->
+<!--            </div>-->
+            <table class="layui-table">
+                <colgroup>
+                    <col width="300">
+                    <col width="300">
+                </colgroup>
+                <thead>
+                <tr>
+                    <!--                <th><input type="checkbox" name="" lay-skin="primary" lay-filter="quanx"></th>-->
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>未标注数据</th>
+                    <th>已标注数据</th>
+                    <th>已通过数据</th>
+                    <th>已打回数据</th>
+                    <th>已返工数据</th>
+                    <th>新上传数据</th>
+                    <th>总劳务费</th>
+                </tr>
+                </thead>
+                <tbody class="ctList2">
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    var userId = getUrlParam('userId'); //搜索类型;
+    var acquisitionTimeStart = '';
+    var acquisitionTimeEnd = '';
+    var timeObj = {
+        start:'',
+        end:''
+    }
+    var tObj = {
+        start:getDate(3),
+        end:getTime(new Date())
+    }
+    layui.use(['form','layer','laypage', 'upload', 'element', 'laydate'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+        var laypage = layui.laypage;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        getListFn(timeObj,1);
+        getListFn(tObj,2);
+        $.ajax({
+            url:'/message/detail',
+            type:'post',
+            data:{usernameId:userId},
+            success:function(msg){
+                // console.log(msg)
+                if(msg.success) {
+                    var data = JSON.parse(msg.json).personmessage;
+                    console.log(data);
+                    $('.userInfo li').find('.name').html(data.name)
+                    $('.userInfo li').find('.phone').html(data.phone)
+                    $('.userInfo li').find('.yhk').html(data.yhk)
+                    $('.userInfo li').find('.kfc').html(data.kfc)
+                    $('.userInfo li').find('.id_number').html(data.id_number)
+                    if(data.student_card != ''){
+                        $('.userInfo li').find('.student_card').html('<img src="' + data.student_card + '" alt="">')
+                    }
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test1'
+            ,type: 'datetime'
+            ,range: '~' //或 range: '~' 来自定义分割字符
+            ,done: function(value, date, endDate){
+
+                console.log(value); //得到日期生成的值，如：2017-08-18
+                console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+                console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+
+                if(value != ''){
+                    var trr = value.split(' ~ ');
+                    timeObj.start = trr[0];
+                    timeObj.end =  trr[1];
+                }
+                getListFn(timeObj,1);
+
+            }
+        });
+
+        form.on('select(test2)', function(data){
+            console.log(data.elem); //得到select原始DOM对象
+            console.log(data.value); //得到被选中的值
+            console.log(data.othis); //得到美化后的DOM对象
+
+            switch (data.value) {
+                case '0' :
+                    tObj.start = getDate(3);
+                    getListFn(tObj,2);
+                    break;
+                case '1' :
+                    tObj.start = getDate(7);
+                    getListFn(tObj,2);
+                    break;
+                case '2' :
+                    tObj.start = getDate(30);
+                    getListFn(tObj,2);
+                    break;
+            }
+        });
+
+
+        function getListFn(obj,type){
+            $.ajax({
+                url:'/message/viewdata',
+                type:'post',
+                data:{usernameId:userId,acquisitionTimeStart:obj.start,acquisitionTimeEnd:obj.end},
+                success:function(msg){
+                    console.log(msg);
+                    if(msg.success) {
+                        var data = JSON.parse(msg.json).allmessage;
+                        console.log(data);
+                        var str = '<tr dataid="45">' +
+                                    '    <td>' + obj.start + '</td>' +
+                                    '    <td>' + obj.end + '</td>' +
+                                    '    <td><a href="./examine.html?proofreader=' + userId + '&status=0">' + data.disproof + '条</a></td>' +
+                                    '    <td><a href="./examine.html?proofreader=' + userId + '&status=1">' + data.proof + '条</a></td>' +
+                                    '    <td><a href="./examine.html?proofreader=' + userId + '&status=2">' + data.review + '条</a></td>' +
+                                    '    <td><a href="./examine.html?proofreader=' + userId + '&status=3">' + data.callback + '条</a></td>' +
+                                    '    <td><a href="./examine.html?proofreader=' + userId + '&status=4">' + data.rework + '条</a></td>' +
+                                    '    <td><a href="./examine.html?proofreader=' + userId + '&status=5">' + data.newput + '条</a></td>' +
+                                    '    <td>' + data.money + '元</td>' +
+                                    '</tr>';
+                        if(type == 1){
+                            $('.ctList1').html(str);
+                        }else{
+                            $('.ctList2').html(str);
+                        }
+
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+
+    });
+
+function getDate(day){
+    var today = new Date();
+    var time = today.getTime() - 1000 * 60 * 60 * 24 * day;
+    var t = getTime(time);
+    // console.log(t);
+    var arr = t.split(' ');
+    var str = arr[0] + ' 00:00:00';
+    return str;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .sjkdr .layui-form{width:76%;}
+        .xyb{margin:0;margin-top:20px;}
+        .xyb .layui-btn{width:370px; height:50px; line-height:50px; margin-top:40px;}
+        .sess{width:150px; margin-top:40px;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="iframe dcSj sjkdr" id="open">
+    <h4 class="dcTit">关系型数据库导入</h4>
+    <ul class="buz clearfix">
+        <li class="on">
+            <span>1</span>
+            <p>连接数据库</p>
+        </li>
+        <li class="on">
+            <span>2</span>
+            <p>同步设置</p>
+        </li>
+        <li class="on">
+            <span>3</span>
+            <p>导入完成</p>
+        </li>
+    </ul>
+    <form class="layui-form" action="javascript:;">
+        <img src="/images/success_01.png" alt="" class="sess">
+        <div class="layui-form-item">
+            <div class="layui-input-block xyb">
+                <a href="./sjyglList.html" class="layui-btn layui-btn-normal" lay-submit lay-filter="sub">查看全部数据源</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer','laydate'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+
+    });
+
+</script>
+</body>
+</html>

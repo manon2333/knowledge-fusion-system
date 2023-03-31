@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.bistu.datacollectproofaudit.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.edu.bistu.datacollectproofaudit.pojo.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+  </resultMap>
+
+  <!--  查询-->
+  <!--  查询所有标注人员用户名
+  <select id="slectAllUsername" resultType="com.edu.bistu.datacollectproofaudit.pojo.User" resultMap="BaseResultMap" >
+    select username from user order by id asc limit ${lsn},${displayNumber}
+  </select>
+-->
+
+  <!--  查询所有标注人员用户名-->
+  <select id="selectAllUsername" resultType="com.edu.bistu.datacollectproofaudit.pojo.User" resultMap="BaseResultMap" >
+    select * from user
+  </select>
+
+  <!--  查询所有标注人员用户名-->
+  <select id="selectAllUsernameAs" resultType="com.edu.bistu.datacollectproofaudit.pojo.User" resultMap="BaseResultMap" >
+    select * from user order by id asc limit ${lsn},${displayNumber}
+  </select>
+
+  <!--  查询所有管理人员用户名-->
+  <select id="selectAllManagerName" resultType="com.edu.bistu.datacollectproofaudit.pojo.User" resultMap="BaseResultMap" >
+    select * from manager
+  </select>
+
+  <!--  根据用户名验证标注人员登陆 -->
+  <select id ="login" resultType="java.lang.Boolean">
+   select count(id) from user where username='${username}' and password='${password}'
+  </select>
+
+  <!--  根据用户名验证管理人员登陆 -->
+  <select id ="loginManager" resultType="java.lang.Boolean">
+    select count(id) from manager where username=N'${username}' and password='${password}'
+  </select>
+
+  <!--  查询标注人员数量 -->
+  <select id="getUserNumber" resultType="java.lang.Integer">
+    select count(id) from user where id is not null
+  </select>
+  <!--  通过id查询标注人员名 -->
+  <select id="findUsernameById" resultType="java.lang.String">
+    select username from user where id ='${id}'
+  </select>
+  <!--  通过id查询管理人员名 -->
+  <select id="findManagerById" resultType="java.lang.String">
+    select username from manager where id ='${id}'
+  </select>
+
+
+  <!--  根据标注人员用户名获取全部信息 -->
+  <select id="getDetailMessage" resultType="com.edu.bistu.datacollectproofaudit.pojo.User">
+    select * from user where username='${username}'
+  </select>
+
+  <select id="isExist" resultType="java.lang.Integer">
+    select count(id) from user where username = '${username}'
+  </select>
+
+  <select id="findUserById" resultType="com.edu.bistu.datacollectproofaudit.pojo.User">
+    select * from user where id = '${id}'
+  </select>
+
+  <select id="findManagerNameById" resultType="com.edu.bistu.datacollectproofaudit.pojo.User">
+    select * from manager where id = '${id}'
+  </select>
+
+  <select id="findUserByName" resultType="com.edu.bistu.datacollectproofaudit.pojo.User">
+    select * from user where username = '${username}'
+  </select>
+
+  <select id="findManagerByName" resultType="com.edu.bistu.datacollectproofaudit.pojo.User">
+    select * from manager where username = '${username}'
+  </select>
+
+  <select id="findUserByKeyword" resultType="java.lang.String">
+    select username from user where  username like '${namekeyword}' limit 1
+  </select>
+
+
+
+</mapper>

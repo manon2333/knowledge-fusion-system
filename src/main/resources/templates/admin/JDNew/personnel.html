@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .layui-nav{background:transparent; font-weight:400; padding:0; display: inline-block;}
+        .layui-nav .layui-nav-item a{padding:0;}
+        .layui-nav .layui-nav-more{display:none;}
+        .layui-nav-bar{display:none;}
+        .layui-nav .layui-nav-item{line-height:20px; vertical-align: baseline;}
+        .layui-nav-child{top:22px; width: 90px; line-height: 26px; left:50%; margin-left: -45px;}
+        .layui-nav-child dd{box-shadow:0 0 0 0 #FFF;}
+        #open .layui-table tbody tr td dd a{margin:0; padding: 0; font-size:12px;}
+        #open .layui-table tbody tr td dd a:hover{text-decoration:none;}
+        #open .layui-table tbody tr td>a{display:inline-block;}
+        #open .layui-table tbody tr td a{margin:0 8px;}
+        .layui-nav .layui-nav-child dd.layui-this a, .layui-nav-child dd.layui-this{background:transparent;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<form class="layui-form iframe" action="javascript:;" id="search">
+
+    <a href="./apply.html" class="layui-btn layui-border-black">标注人员申请</a>
+    <a href="javascript:;" class="layui-btn layui-border-black">消息</a>
+    <div class="layui-inline inp_200">
+<!--        <label class="layui-form-label">标注人员</label>-->
+<!--        <div class="layui-input-inline" style="width: 200px;">-->
+<!--            <input type="text" name="namekeyword" placeholder="请输入标注人员" autocomplete="off" class="layui-input keySc">-->
+<!--        </div>-->
+        <label class="layui-form-label">标注人员</label>
+        <div class="layui-input-inline inp_150">
+            <select name="czr" lay-filter="czr" lay-search>
+                <option value="">不限</option>
+<!--                <option value="张三">张三</option>-->
+<!--                <option value="王五">王五</option>-->
+            </select>
+        </div>
+    </div>
+</form>
+<p class="c_fff">共<span class="totle"></span>记录，当前每页显示<span class="dq"></span>条</p>
+<div class="" id="open">
+    <!--    <form class="layui-form" action="javascript:;">-->
+    <!--    <div>每页显示 8 条 , 当前显示 1-8 条记录</div>-->
+    <table class="layui-table">
+        <colgroup>
+            <col width="80">
+            <col width="">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <thead>
+        <tr>
+            <!--                <th><input type="checkbox" name="" lay-skin="primary" lay-filter="quanx"></th>-->
+            <th>序号</th>
+            <th>标注人员</th>
+            <th>未标注数据</th>
+            <th>已标注数据</th>
+            <th>已通过数据</th>
+            <th>已打回数据</th>
+            <th>已返工数据</th>
+            <th>新上传数据</th>
+        </tr>
+        </thead>
+        <tbody class="ctList">
+        <!--                <tr>-->
+        <!--                  <td>1</td>-->
+        <!--                  <td>海</td>-->
+        <!--                  <td>结构化数据</td>-->
+        <!--                  <td><span class="ok">已同步</span></td>-->
+        <!--                  <td>60</td>-->
+        <!--                  <td>2020-7-11 12:43:23</td>-->
+        <!--                  <td>未删除</td>-->
+        <!--                  <td>-->
+        <!--                    <a href="javascript:;">开始同步</a>-->
+        <!--                    <a href="javascript:;">暂停同步</a>-->
+        <!--&lt;!&ndash;                    <a href="javascript:;">更多</a>&ndash;&gt;-->
+        <!--                    <ul class="layui-nav">-->
+        <!--                      <li class="layui-nav-item">-->
+        <!--                          <a href="javascript:;">更多</a>-->
+        <!--                          <dl class="layui-nav-child">-->
+        <!--                              <dd><a href="javascript:;">手动同步</a></dd>-->
+        <!--                              <dd><a href="./editSJY.html">编辑数据源</a></dd>-->
+        <!--                              <dd><a href="javascript:;">删除数据源</a></dd>-->
+        <!--                              <dd><a href="./sjyHtmlList.html">查看数据源</a></dd>-->
+        <!--                          </dl>-->
+        <!--                      </li>-->
+        <!--                    </ul>-->
+        <!--                  </td>-->
+        <!--                </tr>-->
+        <!--                <tr>-->
+        <!--                    <td>2</td>-->
+        <!--                    <td>海</td>-->
+        <!--                    <td>结构化数据</td>-->
+        <!--                    <td><span class="">未同步</span></td>-->
+        <!--                    <td>60</td>-->
+        <!--                    <td>2020-7-11 12:43:23</td>-->
+        <!--                    <td>未删除</td>-->
+        <!--                    <td>-->
+        <!--                        <a href="javascript:;" class="disClick">开始同步</a>-->
+        <!--                        <a href="javascript:;">暂停同步</a>-->
+        <!--                        <ul class="layui-nav">-->
+        <!--                            <li class="layui-nav-item">-->
+        <!--                                <a href="javascript:;">更多</a>-->
+        <!--                                <dl class="layui-nav-child">-->
+        <!--                                    <dd><a href="javascript:;">手动同步</a></dd>-->
+        <!--                                    <dd><a href="javascript:;">编辑数据源</a></dd>-->
+        <!--                                    <dd><a href="javascript:;">删除数据源</a></dd>-->
+        <!--                                    <dd><a href="javascript:;">查看数据源</a></dd>-->
+        <!--                                </dl>-->
+        <!--                            </li>-->
+        <!--                        </ul>-->
+        <!--                    </td>-->
+        <!--                </tr>-->
+        <!--                <tr>-->
+        <!--                    <td>1</td>-->
+        <!--                    <td>海</td>-->
+        <!--                    <td>结构化数据</td>-->
+        <!--                    <td><span class="no">同步失败</span></td>-->
+        <!--                    <td>60</td>-->
+        <!--                    <td>2020-7-11 12:43:23</td>-->
+        <!--                    <td>未删除</td>-->
+        <!--                    <td>-->
+        <!--                        <a href="javascript:;">开始同步</a>-->
+        <!--                        <a href="javascript:;">暂停同步</a>-->
+        <!--                        <ul class="layui-nav">-->
+        <!--                            <li class="layui-nav-item">-->
+        <!--                                <a href="javascript:;">更多</a>-->
+        <!--                                <dl class="layui-nav-child">-->
+        <!--                                    <dd><a href="javascript:;">手动同步</a></dd>-->
+        <!--                                    <dd><a href="javascript:;">编辑数据源</a></dd>-->
+        <!--                                    <dd><a href="javascript:;">删除数据源</a></dd>-->
+        <!--                                    <dd><a href="javascript:;">查看数据源</a></dd>-->
+        <!--                                </dl>-->
+        <!--                            </li>-->
+        <!--                        </ul>-->
+        <!--                    </td>-->
+        <!--                </tr>-->
+        </tbody>
+    </table>
+    <!--    </form>-->
+    <div id="page1" style="text-align:center;"></div>
+</div>
+<script>
+    var page = 1;
+    var limit = 10;
+    var files;
+    var jkObj = {
+        namekeyword: '', //标注人名
+        pageNumber: 1, //第几页
+        displayNumber: 10 //展示页数
+    }
+
+    layui.use(['form','layer','laypage', 'upload', 'element'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var element = layui.element;
+        var laypage = layui.laypage;
+        var upload = layui.upload;
+
+        form.render();
+        getList(jkObj);
+
+        // $('.keySc').on('keyup',function (e) {
+        //     var e = e || window.event;
+        //     if(e.keyCode == 13){
+        //         // window.location.href = '/admin/ctxj.html?kVale=' + $(this).val();
+        //
+        //         jkObj.namekeyword = $(this).val();
+        //         jkObj.pageNumber = 1;
+        //         getList(jkObj);
+        //     }
+        // });
+
+        //标注人 选择
+        form.on('select(czr)', function(data){
+            // console.log(data.elem); //得到select原始DOM对象
+            // console.log(data.value); //得到被选中的值
+            // console.log(data.othis); //得到美化后的DOM对象
+
+            jkObj.namekeyword = data.value;
+            jkObj.pageNumber = 1;
+            getList(jkObj);
+        });
+
+        //标注人 标注人 列表渲染
+        $.ajax({
+            url:'/proofreading/selectProofreader',
+            type:'post',
+            data:{},
+            success:function(msg){
+                if(msg.success) {
+                    var data = JSON.parse(msg.json).userNameList;
+                    console.log(data);
+                    var str = '<option value=""></option>';
+                    for(var i=0; i<data.length; i++){
+                        str += '<option value="' + data[i].username + '">' + data[i].username + '</option>';
+                    }
+                    $('select[name=czr]').html(str);
+
+                    form.render('select');
+                    // form.val("formTest", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                    //     "czr": jkObj.proofreaderId // "name": "value"
+                    // });
+                }
+            },
+            error:function(err){
+                console.log(err);
+            }
+        });
+
+    });
+
+    function getList(obj){
+
+        $.ajax({
+            url:'/message',
+            type:'post',
+            data:obj,
+            beforeSend : function(obj){
+                load = layer.load(1,{shade: [0.5, '#000']});
+            },
+            success:function(msg){
+                console.log(msg);
+                $('.ctList').html('');
+                var totals = 0;
+                if(msg.success) {
+                    layer.closeAll();
+                    var res = JSON.parse(msg.json);
+                    console.log(res);
+                    if(Math.ceil(res.total/obj.displayNumber) < obj.pageNumber && Math.ceil(res.total/obj.displayNumber) != 0){
+                        obj.pageNumber = Math.ceil(res.total/obj.displayNumber) == 0 ? 1 : Math.ceil(res.total/obj.displayNumber);
+                        getList(obj);
+                        return false;
+                    }
+                    var data = res.list;
+                    console.log(data);
+                    var str = '';
+                    for(var i=0; i<data.length; i++){
+
+                        str += '<tr dataid="' + data[i].id + '">' +
+                            '  <td>' + eval(i+1) + '</td>' +
+                            '  <td><a href="./personnelInfo.html?userId=' + data[i].id + '">' + data[i].username + '</a></td>' +
+                            '  <td><a href="./examine.html?proofreader=' + data[i].id + '&status=0">' + data[i].disproof + '条</a></td>' +
+                            '  <td><a href="./examine.html?proofreader=' + data[i].id + '&status=1">' + data[i].proof + '条</a></td>' +
+                            '  <td><a href="./examine.html?proofreader=' + data[i].id + '&status=2">' + data[i].review + '条</a></td>' +
+                            '  <td><a href="./examine.html?proofreader=' + data[i].id + '&status=3">' + data[i].callback + '条</a></td>' +
+                            '  <td><a href="./examine.html?proofreader=' + data[i].id + '&status=4">' + data[i].rework + '条</a></td>' +
+                            '  <td><a href="./examine.html?proofreader=' + data[i].id + '&status=5">' + data[i].newput + '条</a></td>' +
+                            '</tr>';
+
+                    }
+                    totals = res.total;
+                    $('.totle').text(totals);
+                    $('.dq').text(jkObj.displayNumber);
+                    $('.ctList').html(str);
+                    layui.use(['element'], function(){
+
+                        var element = layui.element;
+                        element.render();
+                    })
+
+                    // console.log(page);
+
+                }else{
+                    layer.msg(msg.msg);
+                }
+
+                pageFn(totals)
+            },
+            error:function(err){
+                layer.closeAll();
+                console.log(err);
+            }
+        });
+    }
+
+    function pageFn(total){
+        layui.use(['form','laypage'], function() {
+            var form = layui.form;
+            var laypage = layui.laypage;
+
+            laypage.render({
+                elem: 'page1'
+                ,count: total
+                ,curr:jkObj.pageNumber
+                ,limit:jkObj.displayNumber
+                // ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                ,layout: ['prev', 'page', 'next', 'limit', 'skip']
+                ,jump: function(obj,first){
+                    // console.log(obj);
+                    if(!first){
+                        //do something
+                        jkObj.pageNumber = obj.curr;
+                        jkObj.displayNumber = obj.limit;
+                        getList(jkObj);
+                    }
+
+                }
+            });
+
+            form.render('checkbox');
+
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        .sjkdr .layui-form{width:76%;}
+        .xyb{margin:0;margin-top:20px;}
+        .layui-form-radio{padding:0;margin:0;}
+        .layui-form-radio>i{margin:0;}
+        .layui-radio-disbaled>i{color:#797070!important;}
+        .layui-input, .layui-select, .layui-textarea{height:28px;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="iframe dcSj sjkdr" id="open">
+    <h4 class="dcTit">关系型数据库导入</h4>
+    <ul class="buz clearfix">
+        <li class="on">
+            <span>1</span>
+            <p>连接数据库</p>
+        </li>
+        <li class="on">
+            <span>2</span>
+            <p>同步设置</p>
+        </li>
+        <li>
+            <span>3</span>
+            <p>导入完成</p>
+        </li>
+    </ul>
+    <form class="layui-form" action="javascript:;">
+        <table class="layui-table">
+            <colgroup>
+                <col width="">
+                <col width="">
+                <col width="">
+                <col width="">
+                <col width="">
+                <!--        <col width="140">-->
+                <col width="">
+                <col width="">
+                <col width="">
+            </colgroup>
+            <thead>
+            <tr>
+                <!--                <th><input type="checkbox" name="" lay-skin="primary" lay-filter="quanx"></th>-->
+                <th>序号</th>
+                <th>列名</th>
+                <th>类型</th>
+                <th>是否同步&nbsp;&nbsp;<input type="checkbox" name="" lay-skin="primary" lay-filter="quanx"></th>
+                <th>update_time列</th>
+                <th>标题列</th>
+                <th>html列</th>
+                <th>数据源列</th>
+            </tr>
+            </thead>
+            <tbody class="ctList">
+            <tr>
+                <td>1</td>
+                <td>MD5</td>
+                <td>varchar(50)</td>
+                <td><input type="checkbox" class="list_che" lay-skin="primary"></td>
+                <td><input type="radio" name="updatetime" value="1" ></td>
+                <td><input type="radio" name="title" value="1" ></td>
+                <td><input type="radio" name="isdatasource" value="1" ></td>
+                <td><input type="radio" name="html" value="nan" ></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="layui-form-item">
+            <div class="layui-input-block xyb">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="sub">下一步</button>
+                <a href="./sjkdr1.html" class="layui-btn layui-btn-primary">上一步</a>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer','laydate'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        $('.ctList').html('');
+        var sjklink = JSON.parse($.cookie('sjklink'));
+        console.log(sjklink);
+        var tabs = sjklink.allfieldMap;
+        var tabStr = '';
+        var ind = 1;
+        for(var k in tabs){
+            tabStr += '<tr>' +
+                    '    <td>' + ind + '</td>' +
+                    '    <td>' + k + '</td>' +
+                    '    <td>' + tabs[k] + '</td>' +
+                    '    <td><input type="checkbox" class="list_che" lay-verify="tb" lay-skin="primary" value="1"></td>' +
+                    '    <td><input type="radio" name="updatetime" value="1" disabled></td>' +
+                    '    <td><input type="radio" name="title" value="1" disabled></td>' +
+                    '    <td><input type="radio" name="html" value="1" disabled></td>' +
+                    '    <td>' +
+                    '       <input type="radio" name="isdatasource" value="nan" disabled>' +
+                    '       <div class="layui-input-inline" style="width:150px; display:none;">' +
+                    '           <input type="text" name="datasource" placeholder="请输入数据源名称" autocomplete="off" class="layui-input">' +
+                    '       </div>' +
+                '       </td>' +
+                    '</tr>';
+
+            ind++;
+        }
+        $('.ctList').html(tabStr);
+        form.render();
+
+        //点击是否同步列 开启 后续列项选择
+        $('.ctList').on('click','.layui-form-checkbox',function(){
+            // console.log($(this));
+            if($(this).hasClass('layui-form-checked')){
+                $(this).parents('tr').find('input[type=radio]').attr('disabled',false);
+            }else{
+                $(this).parents('tr').find('input[type=radio]').attr('disabled',true);
+                $(this).parents('tr').find('input[type=radio]').prop('checked',false);
+            }
+            form.render();
+        });
+
+        //点击数据源列  显示数据源名称
+        $('.ctList').on('click','.layui-form-radio',function(){
+
+            if($(this).parent('td').index() == 7){
+
+                // console.log($(this).parent('td').find('.layui-input'));
+                // return false;
+                $(this).parents('.ctList').find('.layui-input-inline').hide()
+                if($(this).hasClass('layui-form-radioed')){
+                    $(this).parent('td').find('.layui-input-inline').show();
+                }else{
+                    $(this).parent('td').find('.layui-input-inline').hide();
+                }
+            }
+
+            form.render();
+        });
+
+        /* 全选 */
+        form.on('checkbox(quanx)', function(data){
+            // console.log(data.elem); //得到checkbox原始DOM对象
+            // console.log(data.elem.checked); //是否被选中，true或者false
+            // console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+            // console.log(data.othis); //得到美化后的DOM对象
+            // $('.list_che').attr('checked',data.elem.checked);
+            // form.render('checkbox');
+            var child = $('.list_che');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+                if(data.elem.checked){
+                    $(item).parents('tr').find('input[type=radio]').attr('disabled',false);
+                }else{
+                    $(item).parents('tr').find('input[type=radio]').attr('disabled',true);
+                    $(item).parents('tr').find('input[type=radio]').prop('checked',false);
+                }
+
+            });
+            form.render();
+
+        });
+
+        //监听提交
+        form.on('submit(sub)', function(data){
+            // layer.msg(JSON.stringify(data.field));
+
+            console.log(data);
+
+            var dataArr = [];
+            $('.ctList tr').each(function (index, item) {
+
+                var data = $(item).children();
+                var tb = data.eq(3).find('.list_che');
+                // console.log(tb.is(':checked'));
+                if(tb.is(':checked')){
+                    console.log(data.eq(4).find('input').is(':checked'));
+                    var updatetime = data.eq(4).find('input').is(':checked')? 1 : 0 ;
+                    var title = data.eq(5).find('input').is(':checked')? 1 : 0 ;
+                    var html = data.eq(6).find('input').is(':checked')? 1 : 0 ;
+                    var isdatasource = data.eq(7).find('input[name=html]').is(':checked')? 1 : 0 ;
+                    var datasource = data.eq(7).find('input[name=datasource]').val() != ''? data.eq(7).find('input[name=datasource]').val() : 0 ;
+
+                    dataArr.push({
+                        "field":data.eq(1).text(),
+                        "fieldtype":data.eq(2).text(),
+                        "updatetime":updatetime,
+                        "html":html,
+                        "title":title,
+                        "isdatasource":isdatasource,
+                        "datasource":datasource
+                    });
+                }
+            });
+            console.log(dataArr);
+
+            // return  false;
+            $.ajax({
+                url:'/datasource/createSynchronizeTable?id=' + sjklink.id,
+                type:'post',
+                dataType:"JSON",
+                contentType:"application/json",
+                data:JSON.stringify(dataArr),
+                beforeSend:function(){
+                    parent.layer.load(1, {shade:0.3});
+                },
+                success:function(msg){
+                    console.log(msg);
+                    parent.layer.closeAll();
+                    if(msg.success){
+
+                        // var data = JSON.parse(msg.fileName);
+                        // parent.layer.msg(msg.msg);
+
+                        $.cookie('sjklink', msg.json);
+                        // layer.msg(msg.msg);
+                        layer.msg(msg.msg,{
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        },function(){
+                            // window.location.reload();
+                            window.location.href = './sjkdr3.html';
+                        });
+
+                    }else{
+                        layer.msg(msg.msg);
+                    }
+
+                },
+                error:function(err){
+                    console.log(err);
+                    parent.layer.closeAll();
+                }
+            });
+
+            return false;
+        });
+
+    });
+
+</script>
+</body>
+</html>

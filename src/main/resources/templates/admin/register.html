@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标注系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/style/admin_common.css">
+    <script type="application/javascript" src="/js/jquery.min.js"></script>
+    <script type="application/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/lib/layui/layui.js"></script>
+    <script type="application/javascript" src="/lib/echarts/echarts.min.js"></script>
+    <script type="application/javascript" src="/js/g6.min.js"></script>
+    <script type="text/javascript" src="/js/statistic.js"></script>
+    <script type="text/javascript" src="/js/dataReport.js"></script>
+    <style>
+        #open>div{font-weight: 500; font-style: normal; font-size: 40px; text-align: center; letter-spacing: 5px; color: #AAAAAA; margin-top:150px;}
+        #open>div span{letter-spacing: 3px; color: #027DB4;}
+        .login{width: 30%; min-width: 520px; margin: 100px auto;}
+
+        .layui-form{padding:30px 60px; border: 2px dashed#1296db; border-radius: 30px; background:rgba(255, 255, 255, 0.1);}
+        h2{font-weight: 600; font-style: normal; font-size: 40px; letter-spacing: 5px; color: #fff; margin-bottom: 40px; text-align: center; text-shadow: 0px 0px 10px rgba(255, 255, 255, 1); -webkit-text-shadow: 0px 0px 10px rgba(255, 255, 255, 1);}
+        .layui-btn{width:100%; font-weight:600;}
+        /*.layui-form-item{margin-bottom: 26px;}*/
+        .openMenu{background:#111725;}
+        .layui-form-label{color: #fff; text-align: left;}
+        .layui-form-label.bt:before{content:'*'; display: inline-block; color:#f00; float: left; font-size: 20px;}
+        .zc a{color: #169BD5;}
+    </style>
+</head>
+<body class="openMenu">
+<!-- 载入左侧菜单指向的jsp（或html等）页面内容 -->
+<div class="login">
+    <form class="layui-form" action="javascript:;">
+        <h2>标注系统</h2>
+        <h2 class="typp">用户注册</h2>
+        <div class="layui-form-item">
+            <label class="layui-form-label bt">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label bt">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label bt">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" required  lay-verify="required" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item zc">
+            <a class="fr" href="./login.html">登录</a>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="login">注册</button>
+        </div>
+    </form>
+</div>
+<script>
+    var typp = getUrlParam('type');
+    layui.use('form', function(){
+        var form = layui.form;
+        if(typp == 2){
+            $('.typp').text('管理员注册');
+        }
+        //监听提交
+        form.on('submit(login)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

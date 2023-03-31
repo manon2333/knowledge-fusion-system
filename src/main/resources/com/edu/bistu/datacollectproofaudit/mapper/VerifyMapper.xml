@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.edu.bistu.datacollectproofaudit.mapper.VerifyMapper" >
+  <resultMap id="BaseResultMap" type="com.edu.bistu.datacollectproofaudit.pojo.Verify" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="datasourceid" property="datasourceid" jdbcType="VARCHAR" />
+    <result column="triple_file" property="tripleFile" jdbcType="VARCHAR" />
+    <result column="subject" property="subject" jdbcType="VARCHAR" />
+    <result column="subject_amount" property="subjectAmount" jdbcType="INTEGER" />
+    <result column="predicate" property="predicate" jdbcType="VARCHAR" />
+    <result column="object" property="object" jdbcType="VARCHAR" />
+    <result column="object_amount" property="objectAmount" jdbcType="INTEGER" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="data_source" property="data_source" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="predicate_type" property="predicateType" jdbcType="INTEGER" />
+    <result column="proof_reader" property="proofReader" jdbcType="VARCHAR" />
+    <result column="proof_time" property="proofTime" jdbcType="TIMESTAMP" />
+    <result column="reviewer" property="reviewer" jdbcType="VARCHAR" />
+    <result column="rev_content" property="rev_content" jdbcType="VARCHAR" />
+    <result column="review_time" property="reviewTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="into_kg" property="intoKg" jdbcType="INTEGER" />
+  </resultMap>
+
+<!--  插入-->
+  <!--  将校对页面的信息存到三元组表中-->
+  <insert id="insertTriplet" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into verify
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="datasourceid != null and datasourceid !=''">
+        datasourceid,
+      </if>
+      <if test="tripleFile != null and tripleFile !=''">
+        triple_file,
+      </if>
+      <if test="subject != null and subject !=''">
+        subject,
+      </if>
+      <if test="subjectAmount != null and subjectAmount !=''">
+        subject_amount,
+      </if>
+      <if test="predicate != null and predicate !=''">
+        predicate,
+      </if>
+      <if test="object != null and object !=''">
+        object,
+      </if>
+      <if test="objectAmount != null and objectAmount !=''">
+        object_amount,
+      </if>
+      <if test="unit != null and unit !=''">
+        unit,
+      </if>
+      <if test="data_source != null and data_source !=''">
+        data_source,
+      </if>
+      <if test="url != null and url !=''">
+        url,
+      </if>
+      <if test="predicateType != null">
+        predicate_type,
+      </if>
+      <if test="proofReader != null and proofReader !=''">
+        proof_reader,
+      </if>
+      <if test="rev_content != null and rev_content !=''">
+        rev_content,
+      </if>
+    <if test="status != null">
+       status,
+    </if>
+      <if test="proofTime != null">
+        proof_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="datasourceid != null and datasourceid !=''">
+        #{datasourceid,jdbcType=VARCHAR},
+      </if>
+      <if test="tripleFile != null and tripleFile !=''">
+        #{tripleFile,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null and subject !=''">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectAmount != null and subjectAmount !=''">
+        #{subjectAmount,jdbcType=INTEGER},
+      </if>
+      <if test="predicate != null and predicate !=''">
+        #{predicate,jdbcType=VARCHAR},
+      </if>
+      <if test="object != null and object !=''">
+        #{object,jdbcType=VARCHAR},
+      </if>
+      <if test="objectAmount != null and objectAmount !=''">
+        #{objectAmount,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null and unit !=''">
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="data_source != null and data_source !=''">
+        #{data_source,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null and url !=''">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="predicateType != null">
+        #{predicateType,jdbcType=INTEGER},
+      </if>
+      <if test="proofReader != null and proofReader !=''">
+        #{proofReader,jdbcType=VARCHAR},
+      </if>
+      <if test="proofTime != null">
+        #{proofTime,jdbcType=TIMESTAMP},
+      </if>
+    <if test="rev_content != null and rev_content !=''">
+      #{rev_content,jdbcType=VARCHAR},
+    </if>
+    <if test="status != null and status !=''">
+      #{status,jdbcType=VARCHAR},
+    </if>
+    </trim>
+
+  </insert>
+
+<!--  查询-->
+  <!--  检查新存进三元组表中数据是否已存在-->
+  <select id="checkTriple"  resultType="java.lang.Integer">
+    select COUNT(*) from verify where subject=#{subject} and predicate=#{predicate} and object=#{object} and predicate_type=#{predicateType} and datasourceid=#{datasourceid};
+  </select>
+
+  <!--  检查新存进三元组表中数据是否已存在该类型三元组-->
+  <select id="checkTypeTriple"  resultType="java.lang.Integer">
+    select COUNT(*) from verify where subject=#{subject} and predicate=#{predicate} and predicate_type= 0 and datasourceid=#{datasourceid};
+  </select>
+
+
+  <!--  判断二元组在表中是否存在（主语和谓语）-->
+  <select id="checkBinary"  resultType="java.lang.Integer">
+    select COUNT(*) from verify where subject=#{subject} and predicate=#{predicate};
+  </select>
+  <!--  根据ID查询三元组-->
+  <select id="selectByPrimaryKey"  parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where id='${id}'
+  </select>
+  <!--  根据实体名和实体类型检索实体类型三元组-->
+  <select id="getEntityByNameAndCategory"  parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where datasourceid='${datasourceId}' and predicate_type = 0 and subject='${entityName}' and object='${categoryName}'
+  </select>
+  <!--  根据实体名和页面ID检索实体类型三元组-->
+  <select id="getEntityByNameAndDatasourceId"  parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where datasourceid='${datasourceId}' and predicate_type = 0 and subject='${entityName}'
+  </select>
+  <!--  模糊查询实体名-->
+  <select id="fuzzyQueryEntityname" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where predicate_type='0' and subject like '${entityName}'
+  </select>
+
+  <!--  模糊查询实体别名-->
+  <select id="fuzzyQueryEntityAlias" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where predicate_type='1' and predicate='alias_name' and object like '${entityName}'
+  </select>
+
+
+
+  <!--  根据实体类型查询实体名-->
+  <select id="selectEntityByEntityType" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where predicate_type='0' and object = '${entitytype}'
+  </select>
+  <!--  查询头实体为该实体名的实体-->
+  <select id="queryEntityByHeadname" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where subject='${entityName}' and datasourceid='${datasourceId}'
+  </select>
+  <!--  查询尾实体为该实体名的实体-->
+  <select id="queryEntityByTailname" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where object='${entityName}' and datasourceid='${datasourceId}'
+  </select>
+
+
+
+  <!--  根据谓语类型查询某实体属性三元组-->
+  <select id="selectAttributeTripleByPredicateType" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where predicate_type='1' and subject = '${entity}' and datasourceid='${datasourceId}'
+  </select>
+  <!--  根据谓语类型查询某实体关系三元组-->
+  <select id="selectRelationTripleByPredicateType" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where predicate_type='2' and (subject = '${entity}' or object = '${entity}') and datasourceid='${datasourceId}'
+  </select>
+  <!--  查看实体Html详情页已存在的某类实体-->
+  <select id="getEntityByType" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where datasourceid='${datasourceId}' and predicate_type = 0 and object = '${entityType}'
+  </select>
+  <!--  根据实体名查询实体-->
+  <select id="getEntityByName" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where datasourceid='${datasourceId}' and predicate_type = 0 and subject like '${entityName}'
+  </select>
+  <!--  根据实体名和实体类型查询实体-->
+  <select id="getEntity" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap">
+    select * from verify where datasourceid='${datasourceId}' and predicate_type = 0 and subject like '${entityName}' and object = '${entityType}'
+  </select>
+
+
+
+  <!--  查看实体Html详情页已存在的实体-->
+  <select id="getAllEntity" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" resultMap="BaseResultMap" >
+    select * from verify where datasourceid='${dataSourceId}' and predicate_type = 0
+  </select>
+  <!--  查看该html页面是否同步-->
+  <select id="getIsProof" resultType="java.lang.Integer" >
+    select isproof from ${tableName} where id='${id}' limit 1;
+  </select>
+  <!--  查看实体的类型-->
+  <select id="getEntityType" resultType="java.lang.String" >
+    select object from verify where subject='${subject}' and predicate_type = 0 and datasourceid='${datasourceId}' limit 1;
+  </select>
+  <!--  查看数据源下的实体类型-->
+  <select id="checkEntityType" resultType="java.lang.String" >
+    select object from verify where datasourceid='${datasourceid}' and predicate_type = 0
+  </select>
+  <!--  得到属性某实体属性名和属性值的map-->
+  <select id="getProperties" resultType="java.util.HashMap" >
+    select predicate,object from verify where subject='${subject}' and predicate_type = 1
+  </select>
+
+  <!--  查询某一实体的三元组是否全部正确-->
+  <select id="selectTheWholeEntityStatus" resultType="java.lang.Integer" >
+    select count(id) from verify where status = '0' and datasourceid ='${datasourceid}' and (subject='${subject}' or object ='${subject}') ;
+  </select>
+
+
+  <!--  更新-->
+  <!--  更新三元组-->
+  <update id="updateTriplet" parameterType="com.edu.bistu.datacollectproofaudit.pojo.Verify" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    update verify
+    <set>
+      <if test="datasourceid != null">
+        datasourceid= #{datasourceid,jdbcType=VARCHAR},
+      </if>
+      <if test="tripleFile != null">
+        triple_file= #{tripleFile,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        subject= #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectAmount != null">
+        subject_amount= #{subjectAmount,jdbcType=INTEGER},
+      </if>
+      <if test="predicate != null">
+        predicate= #{predicate,jdbcType=VARCHAR},
+      </if>
+      <if test="object != null">
+        object= #{object,jdbcType=VARCHAR},
+      </if>
+      <if test="objectAmount != null">
+        object_amount= #{objectAmount,jdbcType=INTEGER},
+      </if>
+      <if test="unit != null">
+        unit= #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="rev_content != null">
+        rev_content= #{rev_content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null and status !=''">
+        status= #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="predicateType != null">
+        predicate_type= #{predicateType,jdbcType=INTEGER},
+      </if>
+      <if test="proofReader != null">
+        proof_reader= #{proofReader,jdbcType=VARCHAR},
+      </if>
+      <if test="proofTime != null">
+        proof_time= #{proofTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--  更改实体类型-->
+  <update id="updateObject">
+    update verify set object = '${object}' where subject = '${subject}' and predicate_type = 0;
+  </update>
+
+
+  <!-- 删除 -->
+  <!-- 删除包含某个实体的所有三元组 -->
+  <delete id="deleteEntity" parameterType="java.lang.String">
+        DELETE FROM verify WHERE subject = #{entityName} or object = #{entityName}
+</delete>
+  <delete id="delTriplet" parameterType="java.lang.String">
+        DELETE FROM verify WHERE subject = #{subject} and predicate = #{predicate}
+</delete>
+  <!-- 根据id删除三元组 -->
+  <delete id="deleteTriplet" parameterType="java.lang.Integer">
+        DELETE FROM verify WHERE id = '${id}'
+</delete>
+  <!--  更改三元组状态-->
+  <update id="changeStatus">
+    update verify set status = '${status}' where id = '${id}'
+  </update>
+</mapper>
